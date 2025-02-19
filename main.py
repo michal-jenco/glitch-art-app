@@ -1,5 +1,10 @@
 # started on 18th Feb 2025
 
+# Copyright 2025
+# Author: Michal Jenčo
+# Email: michal.jenco.brno@gmail@com
+
+
 from PIL import Image, ImagePalette
 from random import choice
 from time import time
