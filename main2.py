@@ -1,6 +1,11 @@
 # started on 18th Feb 2025
 
-from PIL import Image, ImagePalette
+# Copyright 2025
+# Author: Michal Jenčo
+# Email: michal.jenco.brno@gmail@com
+
+
+from PIL import Image
 from random import choice
 from time import time
 from math import pow, sqrt, sin, pi, tan, tanh
@@ -60,7 +65,7 @@ def modulo_pixels_2(img: Image) -> Image:
 
     return img
 
-def generate_consecutive_pallettes(img: Image, count: int) -> Image:
+def generate_consecutive_palettes(img: Image, count: int) -> Image:
     for i in range(2, count + 1):
         new_img = img.convert("P", palette=Image.ADAPTIVE, colors=i)
 
@@ -87,4 +92,4 @@ if __name__ == '__main__':
 
     pixels = image.load()  # create the pixel map
 
-    generate_consecutive_pallettes(image, 64)
+    generate_consecutive_palettes(image, 64)
