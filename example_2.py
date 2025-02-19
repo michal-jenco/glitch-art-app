@@ -57,14 +57,6 @@ def generate_consecutive_palettes(img: Image,
         img_save_name = f"pallette-out/3/{int(time())}-{i}.png"
         new_img.show()
 
-def get_colors_from_image(img: Image) -> list[tuple] | None:
-    items = img.convert('RGB').getcolors()
-    rgb_colors = []
-
-    for item in items:
-        rgb_colors.append(item[1])
-
-    return rgb_colors
 
 if __name__ == '__main__':
     image = Image.open("source-imgs/man.jpg")

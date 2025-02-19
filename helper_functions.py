@@ -1,5 +1,7 @@
-from PIL import ImagePalette
+from PIL import ImagePalette, Image
 import random
+from typing import Any
+
 
 def generate_palette(
         size: int,
@@ -24,3 +26,14 @@ def generate_palette(
     ImagePalette.ImagePalette("RGB", palette=palette)
 
     return palette
+
+
+def shift_rgb(img: Image, pixels: Any):
+    width, height = img.size
+
+    for w in range(0, width):
+        for h in range(0, height):
+            r, g, b = pixels[w, h]
+            pixels[w, h] = g, b, r
+
+    return img

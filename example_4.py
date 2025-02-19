@@ -6,92 +6,68 @@ from ctypes.wintypes import HPALETTE
 # Email: michal.jenco.brno@gmail@com
 
 
-from PIL import Image
+from PIL import Image, ImagePalette
 from time import time
-from math import sin, tan, tanh, cos
+from math import sin, tan, tanh, cos, pi
 from typing import Any
 
 from helper_functions import generate_palette
 
 
-def glitch_pixels(img: Image, func_r, func_g, func_b, base_wave_size: int) -> Image:
+def glitch_pixels(img: Image, pixels: Any) -> Image:
     width, height = img.size
 
     for w in range(0, width):
         for h in range(0, height):
             r, g, b = pixels[w, h]
 
-            mod = 0
-            mod = int(h % 5) // (int(w % 3) + 1)
-
-            r, g, b = glitch_process_1(r, g, b, h, w, func_r, func_g, func_b, base_wave_size, mod, mod, mod)
-
-            pixels[w, h] = (r, g, b)
+            pixels[w, h] = displacement_func(r, g, b, w, h)
 
     return img
 
-def glitch_process_1(r, g, b, h, w, f1, f2, f3,
-                     base_wave_size: int,
-                     wave_size_modifier_r: int = 0,
-                     wave_size_modifier_g: int = 0,
-                     wave_size_modifier_b: int = 0) -> tuple:
-    red_amount, green_amount, blue_amount = 235, 185, 215
 
-    new_r = f1((b + w) / (base_wave_size + wave_size_modifier_r)) * red_amount
-    new_g = f2((g + h + r) / (base_wave_size + wave_size_modifier_g)) * green_amount
-    new_b = f3((r + w - h) / (base_wave_size + wave_size_modifier_b)) * blue_amount
+def average_pixel_color(pixel: tuple[int, int, int]) -> tuple[int, int, int]:
+    r, g, b = pixel
 
-    return int(new_r), int(new_g), int(new_b)
+    avg_value = (r + g + b) // 3
 
-def glitch_process_2(r, g, b, h, w, f1, f2, f3,
-                     base_wave_size: int,
-                     wave_size_modifier_r: int = 0,
-                     wave_size_modifier_g: int = 0,
-                     wave_size_modifier_b: int = 0) -> tuple:
-    red_amount, green_amount, blue_amount = 235, 185, 215
+    return avg_value, avg_value, avg_value
 
-    new_r = f1((b * (b / 120)) / (base_wave_size + wave_size_modifier_r)) * red_amount
-    new_g = f2((g + h + r) / (base_wave_size + wave_size_modifier_g)) * green_amount
-    new_b = f3((r + w * (r / 177)) / (base_wave_size + wave_size_modifier_b)) * blue_amount
+def reduce_palette(palette_size: int, img: Any, palette):
+    new_img = img.convert("P", palette=palette, colors=palette_size)
 
-    return int(new_r), int(new_g), int(new_b)
+    return new_img
 
 
-def generate_consecutive_palettes(img: Image,
-                                  image_count: int,
-                                  base_wave_size: int,
-                                  palette: Any = None,
-                                  palette_size: int | None = None) -> Image:
-    for i in range(2, image_count + 2):
-        new_img = img.convert("P",
-                              palette=Image.ADAPTIVE,
-                              colors=i if not palette_size else palette_size
-        )
-        new_img = glitch_pixels(
-            new_img,
-            base_wave_size = base_wave_size,
-            func_r=sin, func_g=cos, func_b=sin,
-        )
+def displacement_func(r, g, b, h, w) -> tuple:
+    new_r = int(sin(r / 255 * pi / 2)) * 255
+    new_g = g
+    new_b = b
 
-        img_save_name = f"pallette-out/3/{int(time())}-{i}.png"
-        new_img.save(img_save_name)
+    return new_r, new_g, new_b
 
-def get_colors_from_image(img: Image) -> list[tuple] | None:
-    items = img.convert('RGB').getcolors()
-    rgb_colors = []
 
-    for item in items:
-        rgb_colors.append(item[1])
+def generate_imgs_with_random_palettes(img, num_of_imgs: int, palette_size: list[int]):
+    pixels = img.load()
+    width, height = img.size
 
-    return rgb_colors
+    # palette = generate_palette(size=palette_size, floor=0, ceiling=185)
+    palette = Image.ADAPTIVE
+    for i in range(0, num_of_imgs):
+        new_palette = ImagePalette.ImagePalette("RGB", palette=palette)
+        image = reduce_palette(palette_size, img, new_palette)
+        image.putpalette(new_palette)
+
+        glitch_pixels(img, pixels)
+
+        img_save_name = f"pallette-out/4/{int(time())}-{i}.png"
+        image.save(img_save_name)
+
 
 if __name__ == '__main__':
-    image = Image.open("source-imgs/man.jpg")
+    image = Image.open("source-imgs/wall.jpg")
 
-    pixels = image.load()
+    palette_size = 12
 
-    generate_consecutive_palettes(image,
-                                  image_count=8,
-                                  base_wave_size=87,
-                                  palette_size=58,
-                                  )
+    generate_imgs_with_random_palettes(image, 3, palette_size)
+
