@@ -8,6 +8,6 @@ use the attached requirements.txt file to install the required packages
 
 ## Usage
 
-run example.py, after that you're on your own
+run any of the example scripts, after that you're on your own
 
 ![ABSOLUTE CINEMA](example-out/1739923913-6.png)
