@@ -1,5 +1,4 @@
 # started on 18th Feb 2025
-from ctypes.wintypes import HPALETTE
 
 # Copyright 2025
 # Author: Michal Jenčo
@@ -23,7 +22,7 @@ def glitch_pixels(img: Image.Image, i: int) -> Image:
         for h in range(0, height):
             r, g, b = pixel_image.getpixel((w, h))
 
-            modified_pixel = displacement_func(r, g, b, w, h, i)
+            modified_pixel = displacement_func(r, g, b, w, h, i, img.size)
             pixel_image.putpixel((w, h), modified_pixel)
 
     return pixel_image
@@ -37,28 +36,51 @@ def reduce_palette(palette_size: int, img: Any, palette):
     return new_img
 
 
-def displacement_func(r, g, b, h, w, i) -> tuple:
-    new_r = (r + (w % i)) % 255
-    new_g = (g + (h % i * 2)) % 200
-    new_b = (b + h + w) // 6 % 255
+def displacement_func(r, g, b, h, w, i, img_size) -> tuple:
+    width, height = img_size
 
-    return new_r, new_g, new_b
+    new_r = (r + ((w + 1) // 5 % 40)) % (w + 1)
+    new_g = (g + h) % (h + 1)
+    new_b = (b + (h % 25) + w) // 6 % (h + 1)
 
+    # new_r = (new_r + ((w + i + 1) % 114)) % 225
+    # new_g = (new_g + h - i) % 205
+    # new_b = (new_b + (h % 555) + w) % 240
+    #
+    # new_r = int(choice((sin, tan))((new_b + w) / 82) * 235)
+    # new_g = int(tan((new_r + new_b + new_g * h) / 82) * 158)
+    # new_b = int(choice((tan, sin))((new_r * w - h) / 82) * 205)
+    #
+    # r = int(choice((sin,))((b + w) / 400) * 235)
+    # g = int(tan((r + b + g * i * h) / 500) * 158)
+    # b = int(choice((tan,))((r * w - h - i * w) / 600) * 205)
 
-def generate_imgs_with_random_palettes(img, num_of_imgs: int, palette_size: list[int], floor: int,  ceiling: int):
-    pixels = img.load()
-    width, height = img.size
+    # new_r = (r - w + i) // 1 % 255
+    # new_g = (g + h - i) // 2 % 255
+    # new_b = (b - h + w - i) // 1 % 255
 
-    for i in range(0, num_of_imgs):
-        palette = generate_palette(size=palette_size, floor=floor, ceiling=ceiling)
-        new_palette = ImagePalette.ImagePalette("RGB", palette=palette)
-        image = reduce_palette(palette_size, img, new_palette)
-        image.putpalette(new_palette)
+    # new_r = (r + (w % i)) % 255
+    # new_g = (g + (h % i * 2)) % 200
+    # new_b = (b + h + w) // 6 % 255
+    #
+    # new_r = (r + (((w // 4) ** abs(sin(i))) % i)) % 255
+    # new_g = (g + ((h // 5) % i * 2)) % 200
+    # new_b = (b + h // 3 + w // 7) % 255
+    #
+    # new_r = (r + (((w // 4) ** abs(sin(i))) % i)) % 255
+    # new_g = (g + ((h // 5) % i * 2)) % 200
+    # new_b = ((b + h // 3 + w // 7) ** abs(tanh(i ** 3))) % 255
 
-        glitch_pixels(img, pixels)
+    # new_r = (r + ((((w + 1) // 4) * abs(tan(i / ((w + 1) / 50)))) % i)) % 255
+    # new_g = (g + ((h // 5) % i * 2)) % 200
+    # new_b = ((b + h // 3 + w // 7) ** abs(tanh(i ** 3))) % 255
 
-        img_save_name = f"pallette-out/5/{int(time())}-{i}.png"
-        image.save(img_save_name, compress_level=1, compress_type=3)
+    # sin_r = sin(w / 16 * pi) * 64
+    # new_r = (r + sin_r) % 256
+    # new_g = 0
+    # new_b = 50
+
+    return int(new_r), int(new_g), int(new_b)
 
 
 def generate_imgs_with_adaptive_palette(img,
@@ -76,13 +98,13 @@ def generate_imgs_with_adaptive_palette(img,
 
 
 if __name__ == '__main__':
-    image = Image.open("source-imgs/man.jpg")
+    image = Image.open("source-imgs/momo1.jpg")
     img_save_name = f"pallette-out/5/{int(time())}.png"
     image.save(img_save_name)
 
     run_count = 16
     variant_count = 20
-    palette_size = 8
+    palette_size = 10
     floor = 35
     ceiling = 255
 

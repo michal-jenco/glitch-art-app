@@ -74,12 +74,27 @@ def generate_circle_mask(size: tuple[int, int], feather: int, max_mask: int = 25
             mask.putpixel(coord, (pixel_value, pixel_value, pixel_value, pixel_value))
 
     mask.show()
-    mask.save("C:/Users/misko/PycharmProjects/glitch-art-app/masks/mask2.PNG")
+    # mask.save("C:/Users/misko/PycharmProjects/glitch-art-app/masks/mask2.PNG")
 
     return mask
 
+
+def convert_image_to_rgba(img: Image) -> Image:
+    width, height = img.size
+
+    for w in range(0, width):
+        for h in range(0, height):
+            coord = (w, h)
+            r, g, b, a = img.getpixel(coord)
+
+            a = (r + g + b) // 3
+
+            img.putpixel(coord, (r, g, b, a))
+    img.show()
+    # img.save("masks/man_rgba2.png")
 
 def mask_images(img1: Image, img2: Image, mask: Image) -> Image:
     return Image.composite(img1, img2, mask)
 
 # generate_circle_mask((1536, 2048), feather=1.5)
+# convert_image_to_rgba(Image.open("masks/man.png"))

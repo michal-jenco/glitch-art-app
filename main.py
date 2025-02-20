@@ -44,7 +44,7 @@ def generate_consecutive_palettes(img: Image, count: int) -> Image:
 
         new_img = modulo_pixels(new_img)
 
-        new_img.save(f"palette-out/momo/{int(time())}-{i}.png")
+        new_img.save(f"palette-out/3/{int(time())}-{i}.png")
 
 def get_colors_from_image(img: Image) -> list[tuple] | None:
     items = img.convert('RGB').getcolors()
@@ -59,7 +59,7 @@ def get_colors_from_image(img: Image) -> list[tuple] | None:
     return rgb_colors
 
 if __name__ == '__main__':
-    image = Image.open("source-imgs/clock.jpg")
+    image = Image.open("source-imgs/man.jpg")
 
     pixels = image.load()  # create the pixel map
 
