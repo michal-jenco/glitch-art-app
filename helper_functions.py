@@ -1,6 +1,8 @@
 from PIL import ImagePalette, Image
 import random
 from typing import Any
+import numpy
+import cv2
 
 
 def generate_palette(
@@ -23,8 +25,6 @@ def generate_palette(
         palette.append(g)
         palette.append(b)
 
-    ImagePalette.ImagePalette("RGB", palette=palette)
-
     return palette
 
 
@@ -37,3 +37,8 @@ def shift_rgb(img: Image, pixels: Any):
             pixels[w, h] = g, b, r
 
     return img
+
+def save_image_with_cv2(img: Image.Image, name: str, format: str = "png"):
+    image_array = numpy.array(img)
+    image_array = cv2.cvtColor(image_array, cv2.COLOR_RGB2BGR)
+    cv2.imwrite(f"{name}.{format}", image_array)
