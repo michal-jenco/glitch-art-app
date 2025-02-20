@@ -7,7 +7,7 @@
 
 from PIL import Image, ImagePalette
 from time import time
-from math import sin, tan, tanh, cos, pi
+from math import sin, tan, tanh, cos, pi, sqrt
 from typing import Any
 from random import choice
 
@@ -39,21 +39,49 @@ def reduce_palette(palette_size: int, img: Any, palette):
 def displacement_func(r, g, b, h, w, i, img_size) -> tuple:
     width, height = img_size
 
-    new_r = (r + ((w + 1) // 5 % 40)) % (w + 1)
-    new_g = (g + h) % (h + 1)
-    new_b = (b + (h % 25) + w) // 6 % (h + 1)
+    # new_r = (r + w + i) // 4 % 255
+    # new_g = (g + h - i) // 4 % 255
+    # new_b = (b + h + w + sqrt(i)) // 4 % 255
 
-    # new_r = (new_r + ((w + i + 1) % 114)) % 225
-    # new_g = (new_g + h - i) % 205
-    # new_b = (new_b + (h % 555) + w) % 240
+    new_r = (r + w + i) / 2 % 255
+    new_g = (g + h - i) / 3 % 255
+    new_b = (b + h + w + sqrt(i)) / 2 % 255
+
+    # new_r = (r + ((w + i + 1) % 114)) % 225
+    # new_g = (g + h - i) % 205
+    # new_b = (b + (h % 555) + w) % 240
+
+    # new_r = (r + ((w + i + 1) % 40)) % 225
+    # new_g = ((g + h - i) % 25) % 205
+    # new_b = (b + (h - i % 50) + w) % 240
+
+    # new_r = int(choice((sin, tan))((b + w) / 82) * 235)
+    # new_g = int(tan((r + b + g * h) / 82) * 158)
+    # new_b = int(choice((tan, sin))((r * w - h) / 82) * 205)
+
+    # new_r = (r + ((w + 1 + i) % 41)) % 225
+    # new_g = (g + h - i) % 185
+    # new_b = (b + (h % 55) + w) % 240
+
+    # new_r = (r + i - ((w * i + 1) % 114)) % 225
+    # new_g = (g + h + i * w) % 205
+    # new_b = (b + (h % 555) + w*i) % 240
+
+    # new_r = (r + ((w + 1) // 5 % 40)) % (w + 1)
+    # new_g = (g + h) % (h + 1)
+    # new_b = (b + (h % 25) + w) // 6 % (h + 1)
     #
-    # new_r = int(choice((sin, tan))((new_b + w) / 82) * 235)
-    # new_g = int(tan((new_r + new_b + new_g * h) / 82) * 158)
-    # new_b = int(choice((tan, sin))((new_r * w - h) / 82) * 205)
-    #
-    # r = int(choice((sin,))((b + w) / 400) * 235)
-    # g = int(tan((r + b + g * i * h) / 500) * 158)
-    # b = int(choice((tan,))((r * w - h - i * w) / 600) * 205)
+    # new_r = (r + ((w + i + 1) % 114)) % 225
+    # new_g = (g + h - i) % 205
+    # new_b = (b + (h % 555) + w) % 240
+
+    # new_r = int(choice((sin, tan))((b + w) / 82) * 235)
+    # new_g = int(tan((r + b + g * h) / 82) * 158)
+    # new_b = int(choice((tan, sin))((r * w - h) / 82) * 205)
+
+    # new_r = int(choice((sin,))((b + w) / 400) * 235)
+    # new_g = int(tan((r + b + g * i * h) / 500) * 158)
+    # new_b = int(choice((tan,))((r * w - h - i * w) / 600) * 205)
 
     # new_r = (r - w + i) // 1 % 255
     # new_g = (g + h - i) // 2 % 255
@@ -104,7 +132,7 @@ if __name__ == '__main__':
 
     run_count = 16
     variant_count = 20
-    palette_size = 10
+    palette_size = 5
     floor = 35
     ceiling = 255
 
