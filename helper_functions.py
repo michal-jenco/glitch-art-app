@@ -3,6 +3,7 @@ import random
 from typing import Any
 import numpy as np
 import cv2
+from math import sin
 
 
 def generate_palette(
@@ -95,6 +96,10 @@ def convert_image_to_rgba(img: Image) -> Image:
 
 def mask_images(img1: Image, img2: Image, mask: Image) -> Image:
     return Image.composite(img1, img2, mask)
+
+
+def get_math_fname(func) -> str:
+    return str(func).split()[-1][:-1]
 
 # generate_circle_mask((1536, 2048), feather=1.5)
 # convert_image_to_rgba(Image.open("masks/man.png"))
