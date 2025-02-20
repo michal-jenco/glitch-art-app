@@ -152,7 +152,7 @@ def generate_imgs_with_adaptive_palette(img,
     img = glitch_pixels(img, i, p1, p2, p3, f1, f2, f3)
     img = reduce_palette(palette_size, img, palette)
 
-    img_save_name = (f"pallette-out/5/{int(time())}-i{i}-c{palette_size}"
+    img_save_name = (f"pallette-out/6/{int(time())}-i{i}-c{palette_size}"
                      f"-{get_math_fname(f1)}-{get_math_fname(f2)}-{get_math_fname(f3)}"
                      f""
                      f".png")
@@ -161,10 +161,10 @@ def generate_imgs_with_adaptive_palette(img,
 
 if __name__ == '__main__':
     image = Image.open("source-imgs/momo1.jpg")
-    img_save_name = f"pallette-out/5/{int(time())}.png"
+    img_save_name = f"pallette-out/6/{int(time())}.png"
 
     run_count = 128
-    variant_count = 24
+    variant_count = 16
     floor = 35
     ceiling = 255
 
@@ -178,7 +178,7 @@ if __name__ == '__main__':
         new_palette = ImagePalette.ImagePalette("P", palette=palette)
         image = reduce_palette(palette_size, image, new_palette)
 
-        image.save(f"pallette-out/5/{int(time())}-orig.png")
+        image.save(f"pallette-out/6/{int(time())}-orig.png")
 
         p1 = choice(params)
         p2 = choice(params)
