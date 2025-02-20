@@ -1,7 +1,7 @@
 from PIL import ImagePalette, Image
 import random
 from typing import Any
-import numpy
+import numpy as np
 import cv2
 
 
@@ -39,6 +39,47 @@ def shift_rgb(img: Image, pixels: Any):
     return img
 
 def save_image_with_cv2(img: Image.Image, name: str, format: str = "png"):
-    image_array = numpy.array(img)
+    image_array = np.array(img)
     image_array = cv2.cvtColor(image_array, cv2.COLOR_RGB2BGR)
     cv2.imwrite(f"{name}.{format}", image_array)
+
+
+def euclidean_distance(p1: tuple[int, int], p2: tuple[int, int]) -> float:
+    p1 = np.array(p1)
+    p2 = np.array(p2)
+
+    dist = np.linalg.norm(p1 - p2)
+
+    return float(dist)
+
+
+def get_image_center_coord(width: int, height: int) -> tuple[int, int]:
+    return width // 2, height // 2
+
+
+def generate_circle_mask(size: tuple[int, int], feather: int, max_mask: int = 255):
+    mask = Image.new(mode="RGBA", size=size)
+
+    width, height = mask.size
+
+    center = get_image_center_coord(*mask.size)
+
+
+    for w in range(0, width):
+        for h in range(0, height):
+            coord = (w, h)
+            dist = int(euclidean_distance(coord, center) / feather)
+            pixel_value = min(dist, max_mask)
+
+            mask.putpixel(coord, (pixel_value, pixel_value, pixel_value, pixel_value))
+
+    mask.show()
+    mask.save("C:/Users/misko/PycharmProjects/glitch-art-app/masks/mask2.PNG")
+
+    return mask
+
+
+def mask_images(img1: Image, img2: Image, mask: Image) -> Image:
+    return Image.composite(img1, img2, mask)
+
+# generate_circle_mask((1536, 2048), feather=1.5)

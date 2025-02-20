@@ -12,7 +12,7 @@ from math import sin, tan, tanh, cos, pi
 from typing import Any
 from random import choice
 
-from helper_functions import generate_palette, save_image_with_cv2
+from helper_functions import generate_palette
 
 
 def glitch_pixels(img: Image.Image, i: int) -> Image:
@@ -38,33 +38,9 @@ def reduce_palette(palette_size: int, img: Any, palette):
 
 
 def displacement_func(r, g, b, h, w, i) -> tuple:
-    # new_r = (r + ((w + 1) // 5 % 40)) % (w + 1)
-    # new_g = (g + h) % (h + 1)
-    # new_b = (b + (h % 25) + w) // 6 % (h + 1)
-
-    # new_r = (r + ((w + i + 1) % 114)) % 225
-    # new_g = (g + h - i) % 205
-    # new_b = (b + (h % 555) + w) % 240
-
-    # new_r = int(choice((sin, tan))((b + w) / 82) * 235)
-    # new_g = int(tan((r + b + g * h) / 82) * 158)
-    # new_b = int(choice((tan, sin))((r * w - h) / 82) * 205)
-
-    # new_r = (r + ((w + 1 + i) % 41)) % 225
-    # new_g = (g + h - i) % 185
-    # new_b = (b + (h % 55) + w) % 240
-
-    # new_r = (r + i - ((w * i + 1) % 114)) % 225
-    # new_g = (g + h + i * w) % 205
-    # new_b = (b + (h % 555) + w*i) % 240
-
-    # new_r = int(choice((sin))((b + w) / 400) * 235)
-    # new_g = int(tan((r + b + g * i * h) / 500) * 158)
-    # new_b = int(choice((tan))((r * w - h - i * w) / 600) * 205)
-
-    new_r = (r + w + i) // 1 % 255
-    new_g = (g + h - i) // 2 % 255
-    new_b = (b + h + w + i) // 1 % 255
+    new_r = (r + (w % i)) % 255
+    new_g = (g + (h % i * 2)) % 200
+    new_b = (b + h + w) // 6 % 255
 
     return new_r, new_g, new_b
 
@@ -97,22 +73,21 @@ def generate_imgs_with_adaptive_palette(img,
 
     img_save_name = f"pallette-out/5/{int(time())}-{i}.png"
     img.save(img_save_name)
-    # save_image_with_cv2(img=img, name=img_save_name)
 
 
 if __name__ == '__main__':
-    image = Image.open("source-imgs/momo1.jpg")
+    image = Image.open("source-imgs/man.jpg")
     img_save_name = f"pallette-out/5/{int(time())}.png"
     image.save(img_save_name)
 
     run_count = 16
-    variant_count = 12
+    variant_count = 20
+    palette_size = 8
+    floor = 35
+    ceiling = 255
 
-    for j in range(0, run_count):
-
-        palette_size = 12
-        floor = 35
-        palette = generate_palette(size=palette_size, ceiling=255)
+    for j in range(1, run_count):
+        palette = generate_palette(size=palette_size)
         new_palette = ImagePalette.ImagePalette("P", palette=palette)
         image = reduce_palette(palette_size, image, new_palette)
 
