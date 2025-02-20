@@ -51,8 +51,7 @@ def generate_imgs_with_random_palettes(img, num_of_imgs: int, palette_size: list
     pixels = img.load()
     width, height = img.size
 
-    # palette = generate_palette(size=palette_size, floor=0, ceiling=185)
-    palette = Image.ADAPTIVE
+    palette = generate_palette(size=palette_size, floor=0, ceiling=185)
     for i in range(0, num_of_imgs):
         new_palette = ImagePalette.ImagePalette("RGB", palette=palette)
         image = reduce_palette(palette_size, img, new_palette)
