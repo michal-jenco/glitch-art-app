@@ -7,7 +7,9 @@
 
 from PIL import Image, ImagePalette
 from time import time
-from math import  sin, tan, tanh, cos, sqrt
+from math import  sin, tan, tanh, cos, sqrt, log10, atanh, asinh, acosh, cosh, sinh
+
+from numpy.f2py.rules import module_rules
 
 from helper_functions import reduce_palette, generate_palette
 
@@ -21,7 +23,11 @@ def glitch_pixels(img: Image, func_r, func_g, func_b, base_wave_size: int) -> Im
 
             mod = int(h % 25)
 
-            r, g, b = fractally_func_4(r, g ,b, h, w, func_r, func_g, func_b, base_wave_size, mod, mod, mod)
+            mod_r = int(h % 25)
+            mod_g = int(h % 25)
+            mod_b = int(h % 25)
+
+            r, g, b = fractally_func_4(r, g ,b, h, w, func_r, func_g, func_b, base_wave_size, mod_r, mod_g, mod_b)
 
             pixels[w, h] = (r, g, b)
 
@@ -49,8 +55,16 @@ def fractally_func_4(r, g, b, h, w, f1, f2, f3,
     # new_g = (g + f2(r) + r) / (base_wave_size + wave_size_modifier_g) * green_amount
     # new_b = (b + f3(g) - h) / (base_wave_size + wave_size_modifier_b) * blue_amount
 
-    base_wave_size = 256
-    new_r = (r + f1(b)) / (base_wave_size + wave_size_modifier_r) * red_amount
+    ### this code is really, really sensitive to the value of base_wave_size - play around 255
+    ### CRAZY COOL CRT CUTOFF
+    # base_wave_size = 250
+    # new_r = (r + f1(b) + h -w -w) / (base_wave_size + wave_size_modifier_r) * red_amount
+    # new_g = (g + f2(r) + r) / (base_wave_size + wave_size_modifier_g) * green_amount
+    # new_b = (b + f3(g) - h) / (base_wave_size + wave_size_modifier_b) * blue_amount
+
+    ### this code is really, really sensitive to the value of base_wave_size - play around 255
+    base_wave_size = 250
+    new_r = (r + f1(b) + h -w -w) / (base_wave_size + wave_size_modifier_r) * red_amount
     new_g = (g + f2(r) + r) / (base_wave_size + wave_size_modifier_g) * green_amount
     new_b = (b + f3(g) - h) / (base_wave_size + wave_size_modifier_b) * blue_amount
 
@@ -86,7 +100,7 @@ def generate_consecutive_palettes(img: Image,
         new_img = glitch_pixels(
             new_img,
             base_wave_size = base_wave_size,
-            func_r = tan, func_g = tan, func_b = tanh,
+            func_r = cos, func_g = tanh, func_b = sin,
         )
 
         img_save_name = f"pallette-out/6/{int(time())}-{i}.png"
@@ -104,6 +118,6 @@ if __name__ == '__main__':
 
         generate_consecutive_palettes(image,
                                       image_count=20,
-                                      palette_size=40,
+                                      palette_size=13,
                                       base_wave_size=None,
                                       )

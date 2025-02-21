@@ -49,6 +49,7 @@ def fractally_func_4(r, g, b, h, w, f1, f2, f3,
     # new_g = (g + f2(r) + r) / (base_wave_size + wave_size_modifier_g) * green_amount
     # new_b = (b + f3(g) - h) / (base_wave_size + wave_size_modifier_b) * blue_amount
 
+    ###this code is really really sensitive to the value of base_wave_size - play around 255
     base_wave_size = 256
     new_r = (r + f1(b)) / (base_wave_size + wave_size_modifier_r) * red_amount
     new_g = (g + f2(r) + r) / (base_wave_size + wave_size_modifier_g) * green_amount
@@ -104,6 +105,7 @@ if __name__ == '__main__':
 
         generate_consecutive_palettes(image,
                                       image_count=20,
+                                      ### really sensitive to palette size, play with it
                                       palette_size=40,
                                       base_wave_size=None,
                                       )
