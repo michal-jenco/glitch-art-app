@@ -7,15 +7,17 @@
 
 from PIL import Image, ImagePalette
 from time import time
-from math import  sin, tan, tanh, cos, sqrt, log10, atanh, asinh, acosh, cosh, sinh
+from math import  sin, tanh, cos, tan
+import numpy as np
+from numpy.random import choice
 
-from random import choice
-
-from helper_functions import reduce_palette, generate_palette
+from helper_functions import generate_palette
 
 
 def glitch_pixels(img: Image, func_r, func_g, func_b, base_wave_size: int, i: int) -> Image:
     width, height = img.size
+
+    print(func_r, func_g, func_b)
 
     for w in range(0, width):
         for h in range(0, height):
@@ -33,6 +35,29 @@ def glitch_pixels(img: Image, func_r, func_g, func_b, base_wave_size: int, i: in
 
     return img
 
+
+def glitch_pixels_numpy(img: Image, func_r, func_g, func_b, base_wave_size: int, i: int) -> Image:
+    width, height = img.size
+
+    pixels = np.array(img)
+
+    for w in pixels:
+        for h in range(0, width // 3):
+            r, g, b = w[h * 3: h * 3 + 3]
+            print(r, g, b)
+
+            mod_r = int(h % 25)
+            mod_g = int(h % 25)
+            mod_b = int(h % 25)
+
+            r, g, b = fractally_func_4(r, g ,b, h, w, func_r, func_g, func_b, base_wave_size, mod_r, mod_g, mod_b, i)
+
+            pixels[w, h] = (r, g, b)
+    img.putdata(pixels)
+
+    return img
+
+
 def fractally_func_4(r, g, b, h, w, f1, f2, f3,
                      base_wave_size: int,
                      wave_size_modifier_r: int = 0,
@@ -40,27 +65,6 @@ def fractally_func_4(r, g, b, h, w, f1, f2, f3,
                      wave_size_modifier_b: int = 0,
                      i: int = 0) -> tuple:
     red_amount, green_amount, blue_amount = 235, 185, 215
-
-    # new_r = f1((b + w) / (base_wave_size + wave_size_modifier_r)) * red_amount
-    # new_g = f2((g + h + r) / (base_wave_size + wave_size_modifier_g)) * green_amount
-    # new_b = f3((r + w - h) / (base_wave_size + wave_size_modifier_b)) * blue_amount
-
-    # new_r = f1((b + w) / 14 / (base_wave_size + wave_size_modifier_r)) * red_amount
-    # new_g = f2((g + h + r) / 14 / (base_wave_size + wave_size_modifier_g)) * green_amount
-    # new_b = f3((r + w - h) / 14 / (base_wave_size + wave_size_modifier_b)) * blue_amount
-
-    ### interesting color progression
-    # base_wave_size = 256
-    # new_r = (r + f1(b)) / (base_wave_size + wave_size_modifier_r) * red_amount
-    # new_g = (g + f2(r) + r) / (base_wave_size + wave_size_modifier_g) * green_amount
-    # new_b = (b + f3(g) - h) / (base_wave_size + wave_size_modifier_b) * blue_amount
-
-    ### this code is really, really sensitive to the value of base_wave_size - play around 255
-    ### CRAZY COOL CRT CUTOFF
-    # base_wave_size = 250
-    # new_r = (r + f1(b) + h -w -w) / (base_wave_size + wave_size_modifier_r) * red_amount
-    # new_g = (g + f2(r) + r) / (base_wave_size + wave_size_modifier_g) * green_amount
-    # new_b = (b + f3(g) - h) / (base_wave_size + wave_size_modifier_b) * blue_amount
 
     ### this code is really, really sensitive to the value of base_wave_size - play around 255
     base_wave_size = 250
@@ -78,6 +82,12 @@ def generate_consecutive_palettes(img: Image,
 
     palette = generate_palette(size=palette_size)
     x = 0
+
+    funcs = (cos, sin)
+    func_r = choice(funcs)
+    func_g = choice(funcs)
+    func_b = choice(funcs)
+
     for i in range(2, image_count + 2):
         x += 1
         print(f"making img {x}")
@@ -96,14 +106,22 @@ def generate_consecutive_palettes(img: Image,
                                   )
         ############# BLOCK 1 ################
 
+        ### this combo is peak vaporwave
+        # func_r = tanh,
+        # func_g = tan,
+        # func_b = sin,
+
 
         new_img = glitch_pixels(
             new_img,
             base_wave_size = base_wave_size,
-            func_r = cos, func_g = tanh, func_b = sin, i = i
+            func_r = func_r,
+            func_g = func_g,
+            func_b = func_b,
+            i = i,
         )
 
-        img_save_name = f"pallette-out/6/{int(time())}-{i}.png"
+        img_save_name = f"pallette-out/vektroid/floral-shoppe/{int(time())}-{i}.png"
         new_img.save(img_save_name)
 
 
@@ -112,12 +130,12 @@ if __name__ == '__main__':
 
     for i in range(0, cnt):
         print(f"making img {i}/{cnt}")
-        image = Image.open("source-imgs/dopamina.jpg")
+        image = Image.open("source-imgs/vektroid/logo.jpg")
 
         pixels = image.load()
 
         generate_consecutive_palettes(image,
-                                      image_count=32,
-                                      palette_size=6,
+                                      image_count=20,
+                                      palette_size=128,
                                       base_wave_size=None,
                                       )
