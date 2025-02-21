@@ -14,6 +14,7 @@ from helper_functions import reduce_palette, generate_palette
 
 def glitch_pixels(img: Image, func_r, func_g, func_b, base_wave_size: int) -> Image:
     width, height = img.size
+    pixels = img.load()
 
     for w in range(0, width):
         for h in range(0, height):
@@ -39,17 +40,17 @@ def fractally_func_4(r, g, b, h, w, f1, f2, f3,
     # new_g = f2((g + h + r) / (base_wave_size + wave_size_modifier_g)) * green_amount
     # new_b = f3((r + w - h) / (base_wave_size + wave_size_modifier_b)) * blue_amount
 
-    new_r = f1((b + w) / 4 / (base_wave_size + wave_size_modifier_r)) * red_amount
-    new_g = f2((g + h + r) / 4 / (base_wave_size + wave_size_modifier_g)) * green_amount
-    new_b = f3((r + w - h) / 4 / (base_wave_size + wave_size_modifier_b)) * blue_amount
+    new_r = f1((b + w) * 4 / (base_wave_size + wave_size_modifier_r)) * red_amount
+    new_g = f2((g + h + r) * 4 / (base_wave_size + wave_size_modifier_g)) * green_amount
+    new_b = f3((r + w - h) * 4 / (base_wave_size + wave_size_modifier_b)) * blue_amount
 
     return int(new_r), int(new_g), int(new_b)
 
 
-def generate_consecutive_palettes(img: Image,
-                                  image_count: int,
+def generate_consecutive_palettes(image_count: int,
                                   base_wave_size: int,
                                   palette_size: int | None = None) -> Image:
+    image = Image.open("source-imgs/momo1.jpg")
 
     palette = generate_palette(size=palette_size)
     for i in range(2, image_count + 2):
@@ -57,7 +58,7 @@ def generate_consecutive_palettes(img: Image,
 
         ############# BLOCK 2 ################
         new_palette = ImagePalette.ImagePalette("P", palette=palette)
-        new_img = img.convert("P", palette=new_palette, colors=palette_size)
+        new_img = image.convert("P", palette=new_palette, colors=palette_size)
         new_img.putpalette(palette)
         ############# BLOCK 2 ################
 
@@ -80,12 +81,7 @@ def generate_consecutive_palettes(img: Image,
 
 
 if __name__ == '__main__':
-    image = Image.open("source-imgs/momo1.jpg")
-
-    pixels = image.load()
-
-    generate_consecutive_palettes(image,
-                                  image_count=20,
+    generate_consecutive_palettes(image_count=20,
                                   palette_size=16,
 
                                   # higher this number, better the dither becomes
