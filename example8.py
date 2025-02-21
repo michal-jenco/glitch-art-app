@@ -9,7 +9,7 @@ from PIL import Image, ImagePalette
 from time import time
 from math import  sin, tan, tanh, cos, sqrt, log10, atanh, asinh, acosh, cosh, sinh
 
-from numpy.f2py.rules import module_rules
+from random import choice
 
 from helper_functions import reduce_palette, generate_palette
 
