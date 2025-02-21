@@ -80,6 +80,14 @@ def generate_circle_mask(size: tuple[int, int], feather: int, max_mask: int = 25
     return mask
 
 
+def reduce_palette(palette_size: int, img: Any, palette):
+    new_img = img.convert("P", palette=Image.ADAPTIVE, colors=palette_size)
+    new_img = new_img.convert("P", palette=palette, colors=palette_size)
+    new_img.putpalette(palette)
+
+    return new_img
+
+
 def convert_image_to_rgba(img: Image) -> Image:
     width, height = img.size
 

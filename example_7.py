@@ -40,103 +40,29 @@ def reduce_palette(palette_size: int, img: Any, palette):
 def displacement_func(r, g, b, h, w, i, img_size, p1, p2, p3, f1, f2, f3) -> tuple:
     width, height = img_size
 
-    # new_r = (r + w + i) // 4 % 255
-    # new_g = (g + h - i) // 4 % 255
-    # new_b = (b + h + w + sqrt(i)) // 4 % 255
+    # new_r = (r + w + i) / p1 % 255
+    # new_g = (g + h - i) / p2 % 255
+    # new_b = (b + h + w + sqrt(i)) / p3 % 255
 
-    # new_r = (r + ((w + i + 1) % 114)) % 225
-    # new_g = (g + h - i) % 205
-    # new_b = (b + (h % 555) + w) % 240
+    # new_r = (r + w + i) / f1(p1) / p1 % 255
+    # new_g = (g + h - i) / f2(p2) / p2 % 255
+    # new_b = (b + h + w + sqrt(i)) / f3(p3) / p3 % 255
 
-    # new_r = (r + ((w + i + 1) % 40)) % 225
-    # new_g = ((g + h - i) % 25) % 205
-    # new_b = (b + (h - i % 50) + w) % 240
+    # new_r = (r + w + i) / f1(p1) / p1 % 255
+    # new_g = (g + h - i) / f2(p2) / p2 % 255
+    # new_b = (b + h + w + sqrt(abs(i))) / f3(p3) / p3 % 255
 
-    # new_r = int(choice((sin, tan))((b + w) / 82) * 235)
-    # new_g = int(tan((r + b + g * h) / 82) * 158)
-    # new_b = int(choice((tan, sin))((r * w - h) / 82) * 205)
+    # new_r = (f2(w / width * pi) + f3(h / height * pi)) + (r + w + i) / f1(p1) / p1 % 255
+    # new_g = (f1(w / width * pi) + f1(h / height * pi)) + (g + h - i) / f2(p2) / p2 % 255
+    # new_b = (f3(w / width * pi) + f2(h / height * pi)) + (b + h + w + sqrt(abs(i))) / f3(p3) / p3 % 255
 
-    # new_r = (r + ((w + 1 + i) % 41)) % 225
-    # new_g = (g + h - i) % 185
-    # new_b = (b + (h % 55) + w) % 240
+    # new_r = ((sin(w / width * pi) * 20 + (w / width * i) + cos(h / height * pi)) + r) % 255
+    # new_g = ((sin(w / width * pi) * 20 + (w / width * i) + cos(h / height * pi)) + g) % 255
+    # new_b = ((sin(w / width * pi) * 20 + (w / width * i) + cos(h / height * pi)) + b) % 255
 
-    # new_r = (r + i - ((w * i + 1) % 114)) % 225
-    # new_g = (g + h + i * w) % 205
-    # new_b = (b + (h % 555) + w*i) % 240
-
-    # new_r = (r + ((w + 1) // 5 % 40)) % (w + 1)
-    # new_g = (g + h) % (h + 1)
-    # new_b = (b + (h % 25) + w) // 6 % (h + 1)
-    #
-    # new_r = (r + ((w + i + 1) % 114)) % 225
-    # new_g = (g + h - i) % 205
-    # new_b = (b + (h % 555) + w) % 240
-
-    # new_r = int(choice((sin, tan))((b + w) / 82) * 235)
-    # new_g = int(tan((r + b + g * h) / 82) * 158)
-    # new_b = int(choice((tan, sin))((r * w - h) / 82) * 205)
-
-    # new_r = int(choice((sin,))((b + w) / 400) * 235)
-    # new_g = int(tan((r + b + g * i * h) / 500) * 158)
-    # new_b = int(choice((tan,))((r * w - h - i * w) / 600) * 205)
-
-    # new_r = (r - w + i) // 1 % 255
-    # new_g = (g + h - i) // 2 % 255
-    # new_b = (b - h + w - i) // 1 % 255
-
-    # new_r = (r + (w % i)) % 255
-    # new_g = (g + (h % i * 2)) % 200
-    # new_b = (b + h + w) // 6 % 255
-    #
-    # new_r = (r + (((w // 4) ** abs(sin(i))) % i)) % 255
-    # new_g = (g + ((h // 5) % i * 2)) % 200
-    # new_b = (b + h // 3 + w // 7) % 255
-    #
-    # new_r = (r + (((w // 4) ** abs(sin(i))) % i)) % 255
-    # new_g = (g + ((h // 5) % i * 2)) % 200
-    # new_b = ((b + h // 3 + w // 7) ** abs(tanh(i ** 3))) % 255
-
-    # new_r = (r + ((((w + 1) // 4) * abs(tan(i / ((w + 1) / 50)))) % i)) % 255
-    # new_g = (g + ((h // 5) % i * 2)) % 200
-    # new_b = ((b + h // 3 + w // 7) ** abs(tanh(i ** 3))) % 255
-
-    # sin_r = sin(w / 16 * pi) * 64
-    # new_r = (r + sin_r) % 256
-    # new_g = 0
-    # new_b = 50
-
-    # new_r = (r + w + i) / 1.2 % 255
-    # new_g = (g + h - i) * 2 % 255
-    # new_b = (b + h + w + sqrt(i)) / 2 % 255
-
-    # new_r = (r + w + i) * 1.5 % 255
-    # new_g = (g + h - i) / 2.5 % 255
-    # new_b = (b + h + w + sqrt(i)) * 4 % 255
-
-    # new_r = (r + w + i) * 9 % 255
-    # new_g = (g + h - i) / 9 % 255
-    # new_b = (b - h - w + sqrt(i * w)) * 1 % 255
-    #
-    # new_r = (r + w + i) * 9 % 255
-    # new_g = (g + sqrt(h * w) - i) / 9 % 255
-    # new_b = (b - h - w + sqrt(i * w)) * 1 % 255
-
-    # new_r = (r + w + i) * 1 % 255
-    # new_g = (g + sqrt(h * w) - i) / 2 % 255
-    # new_b = (b - h - w + sqrt(i * w)) * 7 % 255
-
-    # new_r = (r + w + i) * 1.5 % 255
-    # new_g = (g + (h * w) - i) / 2 % 255
-    # new_b = (b - h - w + (i * w)) * 50 % 255
-
-    new_r = (r + w + i) * (p1) % 255
-    new_g = (g + f2(h * w) - i) / (p2) % 255
-    new_b = (b - h - w + f3(i * w)) * (p3) % 255
-
-    #
-    # new_r = (r + w + i) * 5 % 255
-    # new_g = (g + cos(h * w) * 3 * i - i) / 20 % 255
-    # new_b = (b - h - w + sin(i * w) * 5 * i) * 50 % 255
+    new_r = (r + (w % 2)) % 255
+    new_g = (g + h) % 200
+    new_b = (b + h + w) // 6 % 255
 
     return int(new_r), int(new_g), int(new_b)
 
@@ -154,7 +80,6 @@ def generate_imgs_with_adaptive_palette(img,
 
     img_save_name = (f"pallette-out/6/{int(time())}-i{i}-c{palette_size}"
                      f"-{get_math_fname(f1)}-{get_math_fname(f2)}-{get_math_fname(f3)}"
-                     f""
                      f".png")
     img.save(img_save_name)
 
@@ -164,16 +89,17 @@ if __name__ == '__main__':
     img_save_name = f"pallette-out/6/{int(time())}.png"
 
     run_count = 128
-    variant_count = 16
+    variant_count = 20
     floor = 35
     ceiling = 255
 
-    palette_size = choice((3, 3, 3, 4, 5, 5, 6, 8,))
-    params = (2, 2, 2, 3, 3, 3, 4, 6, 10, 20, .6, .7, .8, 1, 1, 1)
+    params = (2, 2, 2, 3, 3, 3, 4, 6, .6, .7, .8, 1, 1, 1)
+    palette_sizes = (3, 3, 4, 5, 5, 6, 8, 7, 7)
 
-    funcs = (cos, tan, sin, tan, tanh)
+    funcs = (tan, tanh, sin)
 
     for j in range(1, run_count):
+        palette_size = choice(palette_sizes)
         palette = generate_palette(size=palette_size)
         new_palette = ImagePalette.ImagePalette("P", palette=palette)
         image = reduce_palette(palette_size, image, new_palette)
@@ -195,15 +121,18 @@ if __name__ == '__main__':
                     f" {get_math_fname(f1)} {get_math_fname(f2)} {get_math_fname(f3)}"
 
                 )
+
+                i_mod = choice(list(range(-8, 8, 2)))
+
                 generate_imgs_with_adaptive_palette(image,
                                                     num_of_imgs=1,
                                                     palette=new_palette,
                                                     palette_size=palette_size,
                                                     floor = floor,
                                                     ceiling=200,
-                                                    i=int(i * 8 * choice((1.2, 1.5, 2, 3, 4))),
+                                                    i=int(i * i_mod),
                                                     p1=p1, p2=p2, p3=p3,
                                                     f1=f1, f2=f2, f3=f3,
                                                     )
-        except Exception:
-            print("skipping")
+        except Exception as e:
+            print(f"skipping {e}")

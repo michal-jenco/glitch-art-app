@@ -40,6 +40,10 @@ def glitch_process_1(r, g, b, h, w, f1, f2, f3,
     new_r = f1((b + w) / (base_wave_size + wave_size_modifier_r)) * red_amount
     new_g = f2((g + h + r) / (base_wave_size + wave_size_modifier_g)) * green_amount
     new_b = f3((r + w - h) / (base_wave_size + wave_size_modifier_b)) * blue_amount
+    #
+    # new_r = (r + (w % 3)) % 255
+    # new_g = (g + h) % 200
+    # new_b = (b + h + w) // 6 % 255
 
     return int(new_r), int(new_g), int(new_b)
 
@@ -78,7 +82,7 @@ def generate_consecutive_palettes(img: Image,
 
 
 if __name__ == '__main__':
-    image = Image.open("source-imgs/man.jpg")
+    image = Image.open("source-imgs/momo1.jpg")
 
     pixels = image.load()
 

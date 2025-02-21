@@ -168,12 +168,12 @@ if __name__ == '__main__':
     floor = 35
     ceiling = 255
 
-    palette_size = choice((3, 3, 3, 4, 5, 5, 6, 8,))
     params = (2, 2, 2, 3, 3, 3, 4, 6, 10, 20, .6, .7, .8, 1, 1, 1)
 
     funcs = (cos, tan, sin, tan, tanh)
 
     for j in range(1, run_count):
+        palette_size = choice((3, 3, 3, 4, 5, 5, 6, 8,))
         palette = generate_palette(size=palette_size)
         new_palette = ImagePalette.ImagePalette("P", palette=palette)
         image = reduce_palette(palette_size, image, new_palette)

@@ -5,9 +5,11 @@
 # Email: michal.jenco.brno@gmail@com
 
 
-from PIL import Image
+from PIL import Image, ImagePalette
 from time import time
 from math import  sin
+
+from helper_functions import reduce_palette, generate_palette
 
 
 def glitch_pixels(img: Image, func_r, func_g, func_b, base_wave_size: int) -> Image:
@@ -43,19 +45,34 @@ def generate_consecutive_palettes(img: Image,
                                   image_count: int,
                                   base_wave_size: int,
                                   palette_size: int | None = None) -> Image:
+
+    palette = generate_palette(size=palette_size)
     for i in range(2, image_count + 2):
+        ############# SWITCH BLOCK 1 and 2 FOR COOL EFFECT ################
+
+        ############# BLOCK 1 ################
         new_img = img.convert("P",
-                              palette=Image.ADAPTIVE,
-                              colors=i if not palette_size else palette_size
-        )
+                                  palette=Image.ADAPTIVE,
+                                  colors=i if not palette_size else palette_size
+                                  )
+        ############# BLOCK 1 ################
+
+        ############# BLOCK 2 ################
+        new_palette = ImagePalette.ImagePalette("P", palette=palette)
+        new_img = new_img.convert("P", palette=new_palette, colors=palette_size)
+        new_img.putpalette(palette)
+        ############# BLOCK 2 ################
+
+
+
         new_img = glitch_pixels(
             new_img,
             base_wave_size = base_wave_size,
             func_r = sin, func_g = sin, func_b = sin,
         )
 
-        img_save_name = f"pallette-out/3/{int(time())}-{i}.png"
-        new_img.show()
+        img_save_name = f"pallette-out/6/{int(time())}-{i}.png"
+        new_img.save(img_save_name)
 
 
 if __name__ == '__main__':
@@ -65,6 +82,6 @@ if __name__ == '__main__':
 
     generate_consecutive_palettes(image,
                                   image_count=20,
-                                  palette_size=8,
-                                  base_wave_size=75,
+                                  palette_size=7,
+                                  base_wave_size=80,
                                   )
