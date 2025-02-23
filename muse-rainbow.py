@@ -115,7 +115,7 @@ def generate_consecutive_palettes(img: Image,
             i = i,
         )
 
-        img_save_name = f"pallette-out/muse-dark/muse-dark-{int(time())}-{i}.png"
+        img_save_name = f"pallette-out/muse-rainbow/muse-rainbow-{int(time())}-{i}.png"
         new_img.save(img_save_name)
 
 
@@ -129,8 +129,8 @@ if __name__ == '__main__':
         pixels = image.load()
 
         generate_consecutive_palettes(image,
-                                      image_count=64,
-                                      palette_size=128
+                                      image_count=90,
+                                      palette_size=5
                                       ,
                                       base_wave_size=None,
                                       )
