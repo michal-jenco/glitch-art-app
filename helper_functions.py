@@ -2,7 +2,7 @@ from PIL import ImagePalette, Image
 import random
 from typing import Any
 import numpy as np
-import cv2
+# import cv2
 from math import sin
 
 
@@ -39,10 +39,10 @@ def shift_rgb(img: Image, pixels: Any):
 
     return img
 
-def save_image_with_cv2(img: Image.Image, name: str, format: str = "png"):
-    image_array = np.array(img)
-    image_array = cv2.cvtColor(image_array, cv2.COLOR_RGB2BGR)
-    cv2.imwrite(f"{name}.{format}", image_array)
+# def save_image_with_cv2(img: Image.Image, name: str, format: str = "png"):
+#     image_array = np.array(img)
+#     image_array = cv2.cvtColor(image_array, cv2.COLOR_RGB2BGR)
+#     cv2.imwrite(f"{name}.{format}", image_array)
 
 
 def euclidean_distance(p1: tuple[int, int], p2: tuple[int, int]) -> float:
