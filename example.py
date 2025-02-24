@@ -32,6 +32,8 @@ def generate_consecutive_palettes(img: Image, count: int) -> Image:
 
         new_img.show()
 
+        new_img.save(f"out/example-{i}.PNG")
+
 def get_colors_from_image(img: Image) -> list[tuple] | None:
     items = img.convert('RGB').getcolors()
     rgb_colors = []
