@@ -8,8 +8,9 @@ use the attached requirements.txt file to install the required packages
 
 ## Usage
 
-run any of the example scripts, after that you're on your own
+run any of the example scripts, but you are on your own - for now. might make a gui later
 
+## Showcase
 ![ABSOLUTE CINEMA](example-out/1739923913-6.png)
 ![ABSOLUTE CINEMA](example-out/1740097624-3.png)
-
+![ABSOLUTE CINEMA](example-out/vaporwave.gif)
