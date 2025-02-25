@@ -68,9 +68,9 @@ def fractally_func_4(r, g, b, h, w, f1, f2, f3,
 
     ### this code is really, really sensitive to the value of base_wave_size - play around 255
     base_wave_size = 245
-    new_r = r + 0.07 * (f1(b)/ .3 + h -(w * (i + 1))) / (base_wave_size + wave_size_modifier_r) * red_amount
-    new_g = g + 0.07 * (f2(r)/ .3 + r) / (base_wave_size + wave_size_modifier_g) * green_amount
-    new_b = b + 0.07 * (f3(g)/ .3 - h +(w / (i + 1))) / (base_wave_size + wave_size_modifier_b) * blue_amount
+    new_r = r + 0.7 * (f1(b)/ .3 + h -(w * (i + 1))) / (base_wave_size + wave_size_modifier_r) * red_amount
+    new_g = g + 0.7 * (f2(r)/ .3 + r) / (base_wave_size + wave_size_modifier_g) * green_amount
+    new_b = b + 0.7 * (f3(g)/ .3 - h +(w / (i + 1))) / (base_wave_size + wave_size_modifier_b) * blue_amount
 
     return int(new_r), int(new_g), int(new_b)
 
