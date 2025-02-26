@@ -1,9 +1,9 @@
-from PIL import ImagePalette, Image
+from random import randint
+
+from PIL import ImagePalette, Image, ImageDraw
 import random
 from typing import Any
 import numpy as np
-# import cv2
-from math import sin
 
 
 def generate_palette(
@@ -12,7 +12,8 @@ def generate_palette(
         green_amount: float = 1.0,
         blue_amount: float = 1.0,
         floor: int = 0,
-        ceiling: int = 255
+        ceiling: int = 255,
+        group: bool = False,
 ) -> ImagePalette:
 
     palette = []
@@ -22,9 +23,12 @@ def generate_palette(
         g = random.randint(0 + floor, int(min(255 * green_amount, ceiling)))
         b = random.randint(0 + floor, int(min(255 * blue_amount, ceiling)))
 
-        palette.append(r)
-        palette.append(g)
-        palette.append(b)
+        if group:
+            palette.append((r, g, b))
+        else:
+            palette.append(r)
+            palette.append(g)
+            palette.append(b)
 
     return palette
 
@@ -111,3 +115,24 @@ def get_math_fname(func) -> str:
 
 # generate_circle_mask((1536, 2048), feather=1.5)
 # convert_image_to_rgba(Image.open("masks/man.png"))
+
+def generate_stripes_overlay(
+        width: int,
+        height: int,
+        min_w: int,
+        max_w: int,
+        num_of_stripes: int,
+        colors: tuple[tuple],
+) -> Image:
+    image = Image.new(size=(width, height), mode="RGBA")
+    draw = ImageDraw.Draw(image, mode="RGBA")
+
+    for i in range(num_of_stripes):
+        color = colors[i % len(colors)]
+
+        x_from = randint(0, width) + min_w
+        x_to = randint(x_from, x_from + max_w)
+
+        draw.rectangle(((x_from, 0), (x_to, height)), fill=color)
+
+    return image

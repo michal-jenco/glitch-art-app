@@ -8,7 +8,7 @@ use the attached requirements.txt file to install the required packages
 
 ## Usage
 
-run any of the example scripts, but you are on your own - for now. might make a gui later
+run any of the scripts, but you are on your own - for now. might make a gui later
 
 ## Showcase
 ![ABSOLUTE CINEMA](example-out/1739923913-6.png)

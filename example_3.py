@@ -3,7 +3,7 @@ from ctypes.wintypes import HPALETTE
 
 # Copyright 2025
 # Author: Michal Jenčo
-# Email: michal.jenco.brno@gmail@com
+# Email: michal.jenco.brno@gmail.com
 
 
 from PIL import Image

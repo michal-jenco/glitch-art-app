@@ -68,9 +68,9 @@ def fractally_func_4(r, g, b, h, w, f1, f2, f3,
 
     ### this code is really, really sensitive to the value of base_wave_size - play around 255
     base_wave_size = 250
-    new_r = r + .007 * (f1(b)/3 + h -(w * (i + 1))) / (base_wave_size + wave_size_modifier_r) * red_amount
-    new_g = g + .007 * (f2(r)/3 + r) / (base_wave_size + wave_size_modifier_g) * green_amount
-    new_b = b + .007 * (f3(g)/3 - h +(w / (i + 1))) / (base_wave_size + wave_size_modifier_b) * blue_amount
+    new_r = r + .005 * (f1(b)/3 + h -(w * (i + 1))) / (base_wave_size + wave_size_modifier_r) * red_amount
+    new_g = g + .005 * (f2(r)/3 + r) / (base_wave_size + wave_size_modifier_g) * green_amount
+    new_b = b + .005 * (f3(g)/3 - h +(w / (i + 1))) / (base_wave_size + wave_size_modifier_b) * blue_amount
 
     return int(new_r), int(new_g), int(new_b)
 
@@ -106,12 +106,6 @@ def generate_consecutive_palettes(img: Image,
                                   )
         ############# BLOCK 1 ################
 
-        ### this combo is peak vaporwave
-        # func_r = tanh,
-        # func_g = tan,
-        # func_b = sin,
-
-
         new_img = glitch_pixels(
             new_img,
             base_wave_size = base_wave_size,
@@ -121,7 +115,7 @@ def generate_consecutive_palettes(img: Image,
             i = i,
         )
 
-        img_save_name = f"pallette-out/muse/muse-{int(time())}-{i}.png"
+        img_save_name = f"pallette-out/face/{int(time())}-{i}.png"
         new_img.save(img_save_name)
 
 
@@ -130,12 +124,13 @@ if __name__ == '__main__':
 
     for i in range(0, cnt):
         print(f"making img {i}/{cnt}")
-        image = Image.open("source-imgs/muse.jpg")
+        image = Image.open("source-imgs/face/dark.jpg")
 
         pixels = image.load()
 
         generate_consecutive_palettes(image,
-                                      image_count=48,
-                                      palette_size=8,
+                                      image_count=64,
+                                      palette_size=6
+                                      ,
                                       base_wave_size=None,
                                       )
