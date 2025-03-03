@@ -12,16 +12,20 @@ from helper_functions import generate_palette, generate_stripes_overlay, reduce_
 
 
 if __name__ == '__main__':
-    photo = Image.open("source-imgs/eva.jpg")
+    photo = Image.open("source-imgs/star.jpg")
     w, h = photo.size
 
     draw = ImageDraw.Draw(photo, mode="RGBA")
 
-    for i in range(0, 1):
-        for i in range(0, 45):
+    for i in range(0, 100):
+        for j in range(0, 5):
             draw.text(
-                xy=(randrange(-500, w), randrange(0, h)),
-                text="im so pretty", font=ImageFont.truetype("arial", randrange(15, 55)))
+                xy=(randrange(-300, w), randrange(0, h)),
+                text="you're a star", font=ImageFont.truetype("arial", i*2+10),
+                fill="#ff007f",
+                stroke_width=2,
+                stroke_fill='white'
+            )
 
         np_photo = np.array(photo)
         # append alpha channel
@@ -29,7 +33,7 @@ if __name__ == '__main__':
         np_photo = np_photo.astype(float)
 
         palIm = Image.new('P', (1, 1))
-        palette = generate_palette(17)
+        palette = generate_palette(18)
         palIm.putpalette(palette)
 
         effects = generate_stripes_overlay(w, h, 20, 150, 15, palette)
@@ -49,4 +53,4 @@ if __name__ == '__main__':
         imgOut = photo.resize((w, h), resample=0)
         imgOut = imgOut.quantize(palette=palIm, dither=Image.Dither.RASTERIZE)
 
-        imgOut.save(f"pallette-out/text1/text1-{time()}-{i}.png")
+        imgOut.save(f"pallette-out/various/star-{int(time())}-{i}.png")
