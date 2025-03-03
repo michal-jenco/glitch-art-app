@@ -4,17 +4,10 @@
 
 
 from PIL import Image, ImageFont, ImageDraw
-from blend_modes import blending_functions
 import numpy as np
+from time import time
 
-from helper_functions import generate_palette, generate_stripes_overlay
-
-
-def reduce_palette(palette_size: int, img, palette):
-    new_img = img.convert("P", palette=Image.ADAPTIVE, colors=palette_size)
-    new_img.putpalette(palette)
-
-    return new_img
+from helper_functions import generate_palette
 
 
 if __name__ == '__main__':
@@ -37,22 +30,14 @@ if __name__ == '__main__':
     palette = generate_palette(palette_size)
     palIm.putpalette(palette)
 
-    effects = generate_stripes_overlay(w, h, 20, 150, 15, palette)
-    np_effect = np.array(effects)
-    np_effect = np_effect.astype(float)
-
-    imgOut = blending_functions.difference(np_photo, np_effect, 1.0)
-
     # Save images
-    imgOut = np.uint8(imgOut)
+    imgOut = np.uint8(np_photo)
     imgOut = Image.fromarray(imgOut)
 
-    imgOut = reduce_palette(8, imgOut, palette)
-    imgOut = imgOut.convert("L")
-    imgOut = photo.resize(size=(w // 8, h // 8), resample=0)
-    # and scale it up to get pixelate effect
+    imgOut = photo.resize(size=(w // palette_size, h // palette_size), resample=0)
     imgOut = photo.resize((w, h), resample=0)
+
     imgOut = imgOut.quantize(palette=palIm, dither=Image.Dither.RASTERIZE)
 
-    # imgOut.save(f"pallette-out/text1/text1-{time()}-{i}.png")
-    imgOut.show()
+    imgOut.save(f"pallette-out/moon-how-i-see-you/moon-{int(time())}.png")
+    # imgOut.show()
