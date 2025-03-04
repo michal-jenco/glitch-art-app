@@ -38,13 +38,17 @@ def reduce_palette(palette_size: int, img: Any, palette):
 
 
 def displacement_func(r, g, b, h, w, i) -> tuple:
-    # new_r = (r + ((w + 1 + i) % 14)) % 2250
-    # new_g = (g + h - i) % 1850
-    # new_b = (b + (h % 55) - w) % 2400
+    # new_r = (r + ((w + 1 + i) % 14)) % 225
+    # new_g = (g + h - i) % 185
+    # new_b = (b + (h % 55) - w) % 240
+    #
+    # new_r = ((r + ((w % 77 + 1) % 14)) % 1777)
+    # new_g = ((g + h - i) % 2330)
+    # new_b = ((b + (h % 95) - w) % 1750)
 
-    new_r = ((r + ((w % 77 + 1) % 14)) % 1777)
-    new_g = ((g + h - i) % 2330)
-    new_b = ((b + (h % 95) - w) % 1750)
+    new_r = (r + ((w + 1 + i) % 14)) % 225
+    new_g = (g + h - i) % 185
+    new_b = (b + (h % 55) - w) % 240
 
     return new_r, new_g, new_b
 

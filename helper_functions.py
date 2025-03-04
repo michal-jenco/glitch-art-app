@@ -91,6 +91,9 @@ def reduce_palette(palette_size: int, img: Any, palette):
 
     return new_img
 
+def average_rgb_pixel(r, g, b) -> int:
+    return (r + g + b) // 3
+
 
 def convert_image_to_rgba(img: Image) -> Image:
     width, height = img.size
