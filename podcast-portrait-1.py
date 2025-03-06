@@ -38,9 +38,21 @@ def reduce_palette(palette_size: int, img: Any, palette):
 
 
 def displacement_func(r, g, b, h, w, i) -> tuple:
-    new_r = (r + ((w + 1 + i) % 14)) % 225
-    new_g = (g + h - i) % 185
-    new_b = (b + (h % 55) - w) % 240
+    # new_r = (r + ((w // 77 + 1 + i) % 74)) % 210
+    # new_g = (g + h - i) % 175
+    # new_b = (b + (h % 55) - w) % 200
+
+    # new_r = (r + ((w + 1) // 5 % 40)) % (w + 1)
+    # new_g = (g + h) % (h + 1)
+    # new_b = (b + (h % 25) + w) // 60 % (h + 1)
+
+    new_r = (r + ((w + 1 + i) % 14)) % 1123
+    new_g = (g + h - i) % 3189
+    new_b = (b + (h % 15) - w) % 4056
+
+    # new_r = int(choice((sin, tan))((b + w) / 40) * 2135)
+    # new_g = int(tan((r + b + g * h) / i) / 158)
+    # new_b = int(choice((tan, sin))((r * w - h) / i) / 215)
 
     return new_r, new_g, new_b
 
@@ -52,20 +64,23 @@ def generate_imgs_with_adaptive_palette(img,
                                         floor: int,
                                         ceiling: int,
                                         i: int):
-    img = glitch_pixels(img, i)
-    img = reduce_palette(palette_size, img, palette)
 
-    img_save_name = f"pallette-out/kat/{int(time())}-{i}.png"
-    img.save(img_save_name)
+    for j in range(num_of_imgs):
+        img = glitch_pixels(img, i)
+        img = reduce_palette(palette_size, img, palette)
+
+        img_save_name = f"pallette-out/kat/{time()}-{i}.png"
+        img.save(img_save_name)
 
 
 if __name__ == '__main__':
-    image = Image.open("source-imgs/kat/1.jpg")
+    image = Image.open("source-imgs/autumn2.jpg")
+    # image = Image.open("source-imgs/kat/Josef_Hrabak_1893.jpg")
 
     palette_size = 4
     floor = 35
 
-    for i in range(1, 33):
+    for i in range(1, 100):
         palette = generate_palette(size=palette_size)
         new_palette = ImagePalette.ImagePalette("P", palette=palette)
         image = reduce_palette(palette_size, image, new_palette)
