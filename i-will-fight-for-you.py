@@ -7,7 +7,7 @@
 
 from PIL import Image, ImagePalette
 from time import time
-from math import sin, tan, tanh, cos, pi
+from math import sin, tan, tanh, cos, pi, sinh, cosh
 from typing import Any
 from random import choice
 import numpy as np
@@ -35,10 +35,10 @@ def glitch_pixels(image: np.array, sequence_offset: float = 0.0) -> Image:
             # offset_r2 = int(sin(func_arg_r2) * 70)
             # offset_r = offset_r1 + offset_r2
 
-            func_arg_r1 = (i + j /20 + sequence_offset * 7) / 18
-            func_arg_r2 = (j / 17 + sequence_offset ) / 15
-            offset_r1 = int(cos(func_arg_r1) * 40)
-            offset_r2 = int(sin(func_arg_r2) * 50)
+            func_arg_r1 = (i/17  + j / 7 + sequence_offset * 73) / 3
+            func_arg_r2 = (j / 7 + sequence_offset * 7 ) / 15
+            offset_r1 = int(cos(func_arg_r1) * 57)
+            offset_r2 = int(cos(func_arg_r2) * 17)
             offset_r = offset_r1 + offset_r2
 
             # func_arg_r1 = (i + j / 18 + sequence_offset * 9) / 43
@@ -85,7 +85,7 @@ def glitch_pixels(image: np.array, sequence_offset: float = 0.0) -> Image:
 
 
 if __name__ == '__main__':
-    image = Image.open("source-imgs/photos/fog7.jpg")
+    image = Image.open("source-imgs/photos/fog14.jpg")
 
     np_image = np.array(image)
     np_image = np.int16(np_image)
