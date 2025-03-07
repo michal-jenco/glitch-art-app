@@ -46,9 +46,9 @@ def displacement_func(r, g, b, h, w, i) -> tuple:
     # new_g = (g + h) % (h + 1)
     # new_b = (b + (h % 25) + w) // 60 % (h + 1)
 
-    new_r = (r + ((w + 1 + i) % 14)) % 1123
-    new_g = (g + h - i) % 3189
-    new_b = (b + (h % 15) - w) % 4056
+    new_r = (r + ((w + 1 + i) % 54)) % 2112
+    new_g = (g + h - i) % 1389
+    new_b = (b + (h // 115) - w) % 105
 
     # new_r = int(choice((sin, tan))((b + w) / 40) * 2135)
     # new_g = int(tan((r + b + g * h) / i) / 158)
@@ -73,11 +73,12 @@ def generate_imgs_with_adaptive_palette(img,
         img.save(img_save_name)
 
 
+
 if __name__ == '__main__':
-    image = Image.open("source-imgs/autumn2.jpg")
+    image = Image.open("source-imgs/me/1.jpg")
     # image = Image.open("source-imgs/kat/Josef_Hrabak_1893.jpg")
 
-    palette_size = 4
+    palette_size = 7
     floor = 35
 
     for i in range(1, 100):
