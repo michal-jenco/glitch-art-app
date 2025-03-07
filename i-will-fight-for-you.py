@@ -29,11 +29,17 @@ def glitch_pixels(image: np.array, sequence_offset: float = 0.0) -> Image:
             # offset_r2 = int(sin(func_arg_r2) * 70)
             # offset_r = offset_r1 + offset_r2
 
-            func_arg_r1 = (i + j / 2 + sequence_offset * 7) / 10
-            func_arg_r2 = (j/ 25 + sequence_offset / 35) / 17
-            offset_r1 = int(sin(func_arg_r1) * 59)
-            offset_r2 = int(sin(func_arg_r2) * 70)
-            offset_r = offset_r1 - offset_r2
+            # func_arg_r1 = (i + j / 3 + sequence_offset * 7) / 10
+            # func_arg_r2 = (i / 5 + sequence_offset / 3) / 17
+            # offset_r1 = int(sin(func_arg_r1) * 59)
+            # offset_r2 = int(sin(func_arg_r2) * 70)
+            # offset_r = offset_r1 + offset_r2
+
+            func_arg_r1 = (i + j /20 + sequence_offset * 7) / 18
+            func_arg_r2 = (j / 17 + sequence_offset ) / 15
+            offset_r1 = int(cos(func_arg_r1) * 40)
+            offset_r2 = int(sin(func_arg_r2) * 50)
+            offset_r = offset_r1 + offset_r2
 
             # func_arg_r1 = (i + j / 18 + sequence_offset * 9) / 43
             # func_arg_r2 = (i + 75) / 35
@@ -54,11 +60,11 @@ def glitch_pixels(image: np.array, sequence_offset: float = 0.0) -> Image:
             # offset_r = offset_r1 + offset_r2
 
             offset_g1 = 0
-            offset_g2 = -10
+            offset_g2 = -20
             offset_g = offset_g1 + offset_g2
 
             offset_b1 = 0
-            offset_b2 = sin(i * j) * 20
+            offset_b2 = 0
             offset_b = offset_b1 + offset_b2
 
             # func_arg_b1 = (i / 20 + j + sequence_offset * 70) / 70
@@ -79,7 +85,7 @@ def glitch_pixels(image: np.array, sequence_offset: float = 0.0) -> Image:
 
 
 if __name__ == '__main__':
-    image = Image.open("source-imgs/photos/fog4.jpg")
+    image = Image.open("source-imgs/photos/fog7.jpg")
 
     np_image = np.array(image)
     np_image = np.int16(np_image)
