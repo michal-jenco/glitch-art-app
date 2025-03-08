@@ -92,6 +92,7 @@ def generate_consecutive_palettes(img: Image,
 
         img_save_name = f"pallette-out/6/{int(time())}-{i}.png"
         new_img.save(img_save_name)
+        new_img.show()
 
 
 if __name__ == '__main__':

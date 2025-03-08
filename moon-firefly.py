@@ -43,6 +43,9 @@ if __name__ == '__main__':
             xy=(x, y),
             text=text,
             font=ImageFont.truetype("arial", randint(10, 40)),
+            fill="#ff007f",
+            stroke_width=2,
+            stroke_fill='white'
         )
 
         palIm = Image.new('P', (1, 1))
