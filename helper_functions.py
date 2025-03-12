@@ -139,3 +139,18 @@ def generate_stripes_overlay(
         draw.rectangle(((x_from, 0), (x_to, height)), fill=color)
 
     return image
+
+
+def vary_palette(palette, r_amount, g_amount, b_amount, floor, ceiling) -> list:
+    changed_palette = []
+    amounts = r_amount, g_amount, b_amount
+
+    for i, subpixel in enumerate(palette):
+        orig = amounts[i % 3]
+
+        offset = randint(-orig, orig)
+
+        new_color = max(floor, min(subpixel + offset, ceiling))
+
+        changed_palette.append(new_color)
+    return changed_palette
