@@ -68,15 +68,15 @@ def generate_imgs_with_adaptive_palette(img,
 if __name__ == '__main__':
     image = Image.open("source-imgs/slenderman.jpg")
 
-    palette_size = 7
+    palette_size = 8
     floor = 35
 
     palette = generate_palette(size=palette_size)
-    palette[0], palette[1], palette[2] = 20, 5, 39
-    palette[6], palette[7], palette[8] = 50, 15, 29
+    # palette[0], palette[1], palette[2] = 20, 5, 39
+    # palette[6], palette[7], palette[8] = 50, 15, 29
 
     for i in range(1, 128):
-        palette = vary_palette(palette, 10, 10, 10, 0, 220)
+        palette = vary_palette(palette, 5, 1, 5, 0, 220)
 
         new_palette = ImagePalette.ImagePalette("P", palette=palette)
         image = reduce_palette(palette_size, image, new_palette)
