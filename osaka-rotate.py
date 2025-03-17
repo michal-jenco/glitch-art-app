@@ -11,7 +11,7 @@ from typing import Any
 
 from pathlib import Path
 
-from helper_functions import generate_palette
+from helper_functions import generate_palette, vary_palette
 
 
 def glitch_pixels(img: Image.Image, i: int) -> Image:
@@ -41,27 +41,27 @@ def displacement_func(r, g, b, h, w, i) -> tuple:
     # new_g = (g + h - i) % 1115
     # new_b = (b + (h % 55) - w) % 2140
 
-    new_r = (r + ((w + 1 + i) % 14)) % 2915
-    new_g = (g + h - i) % 5115
-    new_b = (b + (h % 55) - w) % 7210
+    new_r = (r + ((w + 1 + i) % 14)) % 9215
+    new_g = (g + h - i) % 1915
+    new_b = (b + (h % 55) - w) % 9210
 
     return new_r, new_g, new_b
 
 
-def generate_imgs_with_adaptive_palette(img,
-                                        palette: ImagePalette,
-                                        palette_size: int,
-                                        floor: int,
-                                        ceiling: int,
-                                        i: int):
+def generate_img_with_adaptive_palette(img,
+                                       palette: ImagePalette,
+                                       palette_size: int,
+                                       floor: int,
+                                       ceiling: int,
+                                       i: int):
     # Make tiny palette Image, one black pixel
-    # palIm = Image.new('P', (1,1))
-    # palIm.putpalette(palette)
+    palIm = Image.new('P', (1,1))
+    palIm.putpalette(palette)
 
     img = glitch_pixels(img, i)
     # Use "L" mode for cool CRT pixel effect
-    # img = img.convert("L")
-    # img = img.quantize(palette=palIm, dither=Image.Dither.FLOYDSTEINBERG)
+    img = img.convert("L")
+    img = img.quantize(palette=palIm, dither=Image.Dither.FLOYDSTEINBERG)
 
     img = reduce_palette(palette_size, img, palette)
 
@@ -72,21 +72,25 @@ def generate_imgs_with_adaptive_palette(img,
 if __name__ == '__main__':
     images = Path("source-imgs/jpeg-sequences/rotating-osaka").glob("*.jpg")
 
-    palette_size = 7
+    palette_size = 9
     floor = 35
 
-    for i, image_path in enumerate(images):
-        image = Image.open(image_path)
 
+    for i, image_path in enumerate(images):
         palette = generate_palette(size=palette_size)
         palette[0], palette[1], palette[2] = 20, 5, 39
         palette[6], palette[7], palette[8] = 50, 15, 29
+        # palette = vary_palette(palette, 20, 10, 30, 0, 220)
+        image = Image.open(image_path)
+
         new_palette = ImagePalette.ImagePalette("P", palette=palette)
         image = reduce_palette(palette_size, image, new_palette)
 
-        generate_imgs_with_adaptive_palette(image,
-                                            palette=new_palette,
-                                            palette_size=palette_size,
-                                            floor = floor,
-                                            ceiling = 50,
-                                            i=i * 8)
+        generate_img_with_adaptive_palette(image,
+                                           palette=new_palette,
+                                           palette_size=palette_size,
+                                           floor = floor,
+                                           ceiling = 50,
+                                           i=i * 8)
+
+
