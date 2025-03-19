@@ -154,3 +154,18 @@ def vary_palette(palette, r_amount, g_amount, b_amount, floor, ceiling) -> list:
 
         changed_palette.append(new_color)
     return changed_palette
+
+
+def create_stripes(image: Image, num_of_stripes: int, stripe_height: int):
+    for i in range(num_of_stripes):
+        upper = randint(0, image.height)
+        lower = upper + stripe_height
+
+        left, upper, right, lower = 0, upper, image.width, lower
+        box = (left, upper, right, lower)
+        stripe = image.crop(box=box)
+
+        upper = randint(0, image.height)
+        lower = upper + stripe_height
+        image.paste(stripe, box=(0, upper, image.width, lower))
+
