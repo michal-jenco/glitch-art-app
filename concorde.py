@@ -66,7 +66,7 @@ if __name__ == '__main__':
         ### ADD TEXT
         if rand_number > .7:
             for j in range(1, randrange(2, 6)):
-                text = quotes[int((j // num_of_images) * len(quotes))]
+                text = quotes[int((i / num_of_images) * len(quotes))]
 
                 draw.text(
                     xy=(randrange(0, w // 3), randrange(0, h)),
