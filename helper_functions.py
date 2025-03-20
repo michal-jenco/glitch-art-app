@@ -156,7 +156,7 @@ def vary_palette(palette, r_amount, g_amount, b_amount, floor, ceiling) -> list:
     return changed_palette
 
 
-def create_stripes(image: Image, num_of_stripes: int, stripe_height: int):
+def create_stripes(image: Image, num_of_stripes: int, stripe_height: int, stripe_func = None):
     for i in range(num_of_stripes):
         upper = randint(0, image.height)
         lower = upper + stripe_height
@@ -165,7 +165,53 @@ def create_stripes(image: Image, num_of_stripes: int, stripe_height: int):
         box = (left, upper, right, lower)
         stripe = image.crop(box=box)
 
+        if stripe_func:
+            stripe = stripe_func(stripe)
+
         upper = randint(0, image.height)
         lower = upper + stripe_height
         image.paste(stripe, box=(0, upper, image.width, lower))
 
+
+def threshold_pixels(img_orig, img_palette, threshold: int):
+    out = []
+
+    for orig_row, palette_row in zip(img_orig, img_palette):
+        row = []
+
+        for orig_pixel, palette_pixel in zip(orig_row, palette_row):
+            avg_orig = average_rgb_pixel(*orig_pixel)
+
+            if avg_orig < threshold:
+                row.append(orig_pixel)
+            else:
+                row.append(palette_pixel)
+
+        out.append(row)
+    return np.uint8(out)
+
+
+def threshold_palette(
+        photo: Image,
+        palette_size: int,
+        threshold: int,
+        palette: tuple | None = None
+) -> Image:
+    np_photo = np.array(photo)
+    np_photo = np_photo.astype(float)
+
+    if not palette:
+        palette = generate_palette(palette_size)
+    palette_image = Image.new('P', (1, 1))
+    palette_image.putpalette(palette)
+
+    imgOut = reduce_palette(palette_size, photo, palette)
+    imgOut = imgOut.convert("RGB")
+
+    np_palette = np.array(imgOut)
+    np_palette = np_palette.astype(float)
+
+    combined = threshold_pixels(np_photo, np_palette, threshold=threshold)
+    combined_image = Image.fromarray(np.array(combined))
+
+    return combined_image
