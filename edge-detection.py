@@ -11,8 +11,8 @@ def stripe_f(image: Image):
     r, g, b = image.split()
 
     r = r.point(lambda i: i * 1.5)
-    g = g.point(lambda i: 0)
-    b = b.point(lambda i: i * 0)
+    g = g.point(lambda i: i * .9)
+    b = b.point(lambda i: i * 1.4)
 
 
     image = Image.merge('RGB', (r, g, b))
@@ -22,7 +22,7 @@ def stripe_f(image: Image):
 
 if __name__ == '__main__':
 
-    photo = Image.open("source-imgs/eclipse.jpg")
+    photo = Image.open("source-imgs/momo-hand.jpg")
     white_image = Image.new("RGB", photo.size, color="white")
 
     w, h = photo.size
