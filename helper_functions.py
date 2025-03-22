@@ -215,3 +215,31 @@ def threshold_palette(
     combined_image = Image.fromarray(np.array(combined))
 
     return combined_image
+
+
+def glitch_pixels(img: Image.Image, i: int) -> Image:
+    width, height = img.size
+    pixel_image = img.convert("RGB")
+
+    for w in range(0, width):
+        for h in range(0, height):
+            r, g, b = pixel_image.getpixel((w, h))
+
+            modified_pixel = displacement_func(r, g, b, w, h, i)
+            pixel_image.putpixel((w, h), modified_pixel)
+
+    return pixel_image
+
+
+def displacement_func(r, g, b, h, w, i) -> tuple:
+    new_r = (r + (w % 25)) % 255
+    new_g = (g + h) % 200
+    new_b = (b + h + w) // 60 % 255
+
+    return new_r, new_g, new_b
+
+
+def generate_img_with_adaptive_palette(img, palette: ImagePalette, palette_size: int, i: int):
+    img = glitch_pixels(img, i)
+    img = reduce_palette(palette_size, img, palette)
+    return img
