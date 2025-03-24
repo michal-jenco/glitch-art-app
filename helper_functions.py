@@ -273,3 +273,58 @@ def make_tiles(photo: Image, cnt: int):
             photo.paste(tile, (int(x), int(y)))
 
         return photo
+
+
+class PanDirection:
+    LEFT_RIGHT = 0
+    RIGHT_LEFT = 1
+    LRL = 2
+    RLR = 3
+
+
+def make_panned_sequence(image: Image,
+                         direction: PanDirection,
+                         step_size: int,
+                         aspect_ratio: str
+                         ) -> list[Image]:
+    """
+    :param image:
+    :param direction:
+    :param step_size:
+    :param aspect_ratio: Need to be string in the format "x:y", e.g. 4:5 for instagram
+    :return:
+    """
+
+    w, h = image.size
+
+    x_ratio, y_ratio = aspect_ratio.split(":")
+    x_ratio, y_ratio = int(x_ratio), int(y_ratio)
+
+    output_sequence: list[Image] = []
+    slide_width = int(h / y_ratio * x_ratio)
+
+    left, upper, right, lower = 0, 0, slide_width, h
+
+    while True:
+        box = left, upper, right, lower
+        slide = image.crop(box)
+
+        output_sequence.append(slide)
+
+        left += step_size
+        right += step_size
+
+        if right > w:
+            break
+
+    if direction == PanDirection.LEFT_RIGHT:
+        return output_sequence
+    elif direction == PanDirection.RIGHT_LEFT:
+        output_sequence.reverse()
+
+        return output_sequence
+    elif direction == PanDirection.LRL:
+        reversed_copy = output_sequence.copy()
+        reversed_copy.reverse()
+
+        return output_sequence[:-1] + reversed_copy
