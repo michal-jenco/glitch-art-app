@@ -243,3 +243,33 @@ def generate_img_with_adaptive_palette(img, palette: ImagePalette, palette_size:
     img = glitch_pixels(img, i)
     img = reduce_palette(palette_size, img, palette)
     return img
+
+
+def make_tiles(photo: Image, cnt: int):
+    w, h = photo.size
+
+    for i in range(cnt):
+        tile_step = random.randrange(10, 35)
+        tile_w, tile_h = random.randrange(50, 200), random.randrange(50, 200)
+
+        left = random.randrange(0, w)
+        upper = random.randrange(0, h)
+        right = left + tile_w
+        lower = upper + tile_h
+
+        box = left, upper, right, lower
+
+        tile = photo.crop(box=box)
+
+        sign1 = random.choice([-1, 1, 0])
+        sign2 = random.choice([-1, 1, 0])
+        weight1 = random.random()
+        weight2 = random.random()
+
+        for i in range(random.randrange(5, 50)):
+            x = left + i * sign1 * weight1 * tile_step ** 1.2
+            y = upper + i * sign2 * weight2 * tile_step ** .8
+
+            photo.paste(tile, (int(x), int(y)))
+
+        return photo
