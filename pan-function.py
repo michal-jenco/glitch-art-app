@@ -11,23 +11,15 @@ from helper_functions import (
 
 
 if __name__ == '__main__':
-    image_path = "source-imgs/pan-test1.jpg"
+    image_path = "source-imgs/song4.jpg"
     photo = Image.open(image_path)
 
-    panned_seq = make_panned_sequence(photo, PanDirection.LRL, 5, "4:5")
+    panned_seq = make_panned_sequence(photo, PanDirection.LRL, 15, "4:5")
 
     palette = generate_palette(8)
 
     for i, slide in enumerate(panned_seq):
         print(f"Saved image {i}/{len(panned_seq)}")
-
-        ### ADD STRIPE COPIES
-        create_stripes(
-            slide,
-            num_of_stripes=randrange(5, 15),
-            stripe_height=randrange(10, 35),
-        )
-        ### ADD STRIPE COPIES
 
         ### DITHER + PALETTE
         palette_image = Image.new('P', (1, 1))
@@ -39,6 +31,14 @@ if __name__ == '__main__':
         )
         ### DITHER + PALETTE
 
-        slide.save(f"pallette-out/pan-test/{i}.png")
+        ### ADD STRIPE COPIES
+        create_stripes(
+            slide,
+            num_of_stripes=randrange(5, 15),
+            stripe_height=randrange(10, 35),
+        )
+        ### ADD STRIPE COPIES
 
-        palette = vary_palette(palette, 15, 5, 15, 0, 185)
+        slide.save(f"pallette-out/song4/{i}.png")
+
+        palette = vary_palette(palette, 15, 15, 15, 0, 225)
