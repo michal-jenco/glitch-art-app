@@ -2,6 +2,7 @@
 # Author: Michal Jenčo
 # Email: michal.jenco.brno@gmail.com
 
+
 from random import  randrange
 
 from PIL import Image
@@ -23,20 +24,19 @@ if __name__ == '__main__':
 
     for s, series_dir in enumerate(series_dirs):
         image_paths = list(Path(series_dir).glob("*.jpg"))
-
         images = [Image.open(image_path) for image_path in image_paths]
-        num_of_images = len(images)
-
         palette = generate_palette(palette_size, floor=0, ceiling=185)
-
         pan_series = make_panned_sequence_list(images, PanDirection.LRL, 20, "3:4")
 
         for i, slide in enumerate(pan_series):
             w, h = slide.size
             palette = vary_palette(palette, 15, 15, 15, 10, 220)
+
+            ### DARKEN THE PALETTE
             for j, _ in enumerate(palette):
                 if j % 4 == 0:
                     palette[j] = randrange(15, 35)
+            ### DARKEN THE PALETTE
 
             ### ADD STRIPE COPIES
             create_stripes(
@@ -50,16 +50,14 @@ if __name__ == '__main__':
             palette_image = Image.new('P', (1, 1))
             palette_image.putpalette(palette)
 
-            slide = slide.quantize(
-                palette=palette_image,
-                dither=Image.Dither.FLOYDSTEINBERG,
-            )
+            slide = slide.quantize(palette=palette_image, dither=Image.Dither.FLOYDSTEINBERG)
             ### DITHER + PALETTE
 
+            ### PIXELATE
             slide = slide.resize(size=(w // pixelation, h // pixelation), resample=0)
-            # and scale it up to get pixelate effect
             slide = slide.resize((w, h), resample=0)
+            ### PIXELATE
 
             save_path = f"pallette-out/glitch-guild/flowers-pixel/s{s}-{i}.png"
-            print(save_path)
+            print(f"Saving {save_path}")
             slide.save(save_path)
