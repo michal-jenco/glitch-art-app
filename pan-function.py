@@ -1,6 +1,7 @@
 # Copyright 2025
 # Author: Michal Jenčo
 # Email: michal.jenco.brno@gmail.com
+
 from random import randrange
 
 from PIL import Image
