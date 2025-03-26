@@ -381,3 +381,15 @@ def make_panned_sequence_list(images: list[Image],
             break
 
     return output_sequence
+
+
+def darken_palette(palette: list,
+                   darken_idx: int = 4,
+                   floor: int = 15,
+                   ceiling: int = 35) -> list[int]:
+    palette_copy = palette.copy()
+
+    for i, pixel_value in enumerate(palette_copy):
+        if i % darken_idx == 0:
+            palette_copy[i] = random.randrange(floor, ceiling)
+    return palette_copy
