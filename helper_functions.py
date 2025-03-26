@@ -328,3 +328,56 @@ def make_panned_sequence(image: Image,
         reversed_copy.reverse()
 
         return output_sequence[:-1] + reversed_copy
+
+
+def make_panned_sequence_list(images: list[Image],
+                              direction: PanDirection,
+                              step_size: int,
+                              aspect_ratio: str
+                              ) -> list[Image]:
+    """
+    :param images: All need to be the exact same dimensions
+    :param aspect_ratio: Need to be string in the format "x:y", e.g. 4:5 for instagram
+    """
+    w, h = images[0].size
+
+    x_ratio, y_ratio = aspect_ratio.split(":")
+    x_ratio, y_ratio = int(x_ratio), int(y_ratio)
+
+    output_sequence: list[Image] = []
+    slide_width = int(h / y_ratio * x_ratio)
+
+    left, upper, right, lower = 0, 0, slide_width, h
+
+    input_images = images.copy()
+    num_of_input_imgs = len(input_images)
+
+    if direction == PanDirection.LEFT_RIGHT:
+        pass
+    elif direction == PanDirection.RIGHT_LEFT:
+        input_images.reverse()
+    elif direction == PanDirection.LRL:
+        reversed_copy = images.copy()
+        reversed_copy.reverse()
+
+        input_images += reversed_copy
+
+    img_idx = 0
+    while True:
+        box = left, upper, right, lower
+        slide = input_images[img_idx % num_of_input_imgs].crop(box)
+
+        output_sequence.append(slide)
+
+        if right >= w:
+            step_size *= -1
+
+        left += step_size
+        right += step_size
+
+        img_idx += 1
+
+        if left == 0:
+            break
+
+    return output_sequence
