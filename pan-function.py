@@ -7,20 +7,21 @@ from random import randrange
 from PIL import Image
 
 from helper_functions import (
-    make_panned_sequence, PanDirection, create_stripes, generate_palette, vary_palette,
+    make_panned_sequence, PanDirection, create_stripes, generate_palette, vary_palette, darken_palette
 )
 
 
 if __name__ == '__main__':
-    image_path = "source-imgs/song4.jpg"
+    image_path = "source-imgs/scout-girl.jpg"
     photo = Image.open(image_path)
 
-    panned_seq = make_panned_sequence(photo, PanDirection.LRL, 15, "4:5")
-
-    palette = generate_palette(8)
+    panned_seq = make_panned_sequence(photo, PanDirection.LRL, 25, "9:16")
 
     for i, slide in enumerate(panned_seq):
+        palette = generate_palette(8)
         print(f"Saved image {i}/{len(panned_seq)}")
+
+        w, h = slide.size
 
         ### DITHER + PALETTE
         palette_image = Image.new('P', (1, 1))
@@ -35,11 +36,14 @@ if __name__ == '__main__':
         ### ADD STRIPE COPIES
         create_stripes(
             slide,
-            num_of_stripes=randrange(5, 15),
+            num_of_stripes=randrange(15, 30),
             stripe_height=randrange(10, 35),
         )
         ### ADD STRIPE COPIES
 
-        slide.save(f"pallette-out/song4/{i}.png")
+        slide = slide.resize(size=(w // 4, h // 4), resample=0)
 
-        palette = vary_palette(palette, 15, 15, 15, 0, 225)
+        slide.save(f"pallette-out/scout-girl/{i}.png")
+
+        # palette = vary_palette(palette, 15, 15, 15, 0, 225)
+        palette = darken_palette(palette)
