@@ -7,7 +7,7 @@ from random import randrange
 from PIL import Image
 
 from helper_functions import (
-    make_panned_sequence, PanDirection, create_stripes, generate_palette, vary_palette, darken_palette
+    make_panned_sequence, PanDirection, create_stripes, generate_palette, darken_palette
 )
 
 

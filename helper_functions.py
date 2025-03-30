@@ -1,6 +1,6 @@
 from random import randint
 
-from PIL import ImagePalette, Image, ImageDraw
+from PIL import ImagePalette, Image, ImageDraw, ImageFont, ImageFilter
 import random
 from typing import Any
 import numpy as np
@@ -393,3 +393,42 @@ def darken_palette(palette: list,
         if i % darken_idx == 0:
             palette_copy[i] = random.randrange(floor, ceiling)
     return palette_copy
+
+
+def add_neon_text(image,
+                  text: str,
+                  position: tuple,
+                  font_size: int,
+                  text_color: tuple | str,
+                  x_offset: int = 20,
+                  y_offset: int = 20,
+                  blur_amount: float = .5,
+                  layers: int = 5,
+                  repetitions: int = 50):
+    image = image.convert("RGBA")
+    draw = ImageDraw.Draw(image)
+    x, y = position
+
+    # Load font
+    font = ImageFont.truetype("arial.ttf", font_size)
+
+    # Create glow effect by drawing multiple blurred layers
+    glow = Image.new("RGBA", image.size, (0, 0, 0, 0))
+    glow_draw = ImageDraw.Draw(glow)
+
+    for j in range(layers):
+        for i in range(repetitions, 0, -1):  # Multiple layers for glow effect
+            glow_draw.text((x, y),
+                           text,
+                           font=font,
+                           fill=(*text_color, i*10))
+
+            # Draw final text
+            draw.text(position, text, font=font, fill=text_color)
+            x += x_offset
+            y += y_offset
+
+        glow = glow.filter(ImageFilter.GaussianBlur(blur_amount))
+        image = Image.alpha_composite(image, glow)
+
+    return image
