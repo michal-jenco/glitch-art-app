@@ -16,10 +16,7 @@ from pathlib import Path
 from PIL import Image, ImageEnhance, ImageFilter, ImageDraw
 
 from texts import schizo
-from helper_functions import add_neon_text
-
-
-
+from helper_functions import add_neon_text, apply_bloom_effect, round_and_diffuse_corners
 
 
 sentences = [

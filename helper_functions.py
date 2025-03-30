@@ -439,6 +439,7 @@ def add_neon_text(image,
     return image
 
 def apply_bloom_effect(image, intensity=1.5, blur_radius=10, brightness_boost=1.8):
+    # written fully by ChatGPT
     # Enhance the bright areas
     bright_enhancer = ImageEnhance.Brightness(image)
     bright_areas = bright_enhancer.enhance(brightness_boost)
@@ -453,6 +454,7 @@ def apply_bloom_effect(image, intensity=1.5, blur_radius=10, brightness_boost=1.
 
 
 def round_and_diffuse_corners(image, radius=50, blur=10, bg_color=(255, 255, 255)):
+    # written fully by ChatGPT
     """
     Rounds and diffuses the corners of an image, filling the corners with a solid color.
 
