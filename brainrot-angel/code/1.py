@@ -19,51 +19,7 @@ from texts import schizo
 from helper_functions import add_neon_text
 
 
-def apply_bloom_effect(image, intensity=1.5, blur_radius=10, brightness_boost=1.8):
-    # Enhance the bright areas
-    bright_enhancer = ImageEnhance.Brightness(image)
-    bright_areas = bright_enhancer.enhance(brightness_boost)
 
-    # Apply a Gaussian blur
-    blurred = bright_areas.filter(ImageFilter.GaussianBlur(blur_radius))
-
-    # Blend the blurred bright areas back with the original image
-    bloom_image = Image.blend(image, blurred, alpha=0.5 * intensity)
-
-    return bloom_image
-
-
-def round_and_diffuse_corners(image, radius=50, blur=10, bg_color=(255, 255, 255)):
-    """
-    Rounds and diffuses the corners of an image, filling the corners with a solid color.
-
-    :param image: PIL Image object.
-    :param radius: The radius of the rounded corners.
-    :param blur: The amount of blur to diffuse the edges.
-    :param bg_color: Background color to replace transparent corners (default: white).
-    :return: PIL Image with rounded, feathered corners.
-    """
-    # Ensure image has an alpha channel
-    image = image.convert("RGBA")
-    width, height = image.size
-
-    # Create a transparent mask
-    mask = Image.new("L", (width, height), 0)
-    draw = ImageDraw.Draw(mask)
-
-    # Draw rounded rectangle (fully opaque inside, transparent outside)
-    draw.rounded_rectangle((0, 0, width, height), radius=radius, fill=255)
-
-    # Apply blur to feather the edges
-    mask = mask.filter(ImageFilter.GaussianBlur(blur))
-
-    # Create a new white background
-    background = Image.new("RGBA", (width, height), bg_color + (255,))
-
-    # Paste the original image using the rounded mask
-    background.paste(image, (0, 0), mask)
-
-    return background
 
 
 sentences = [
