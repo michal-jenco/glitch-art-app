@@ -146,7 +146,7 @@ def generate_stripes_overlay(
     return image
 
 
-def vary_palette(palette, r_amount, g_amount, b_amount, floor, ceiling) -> list:
+def vary_palette(palette, r_amount=15, g_amount=15, b_amount=15, floor=0, ceiling=255) -> list:
     changed_palette = []
     amounts = r_amount, g_amount, b_amount
 
