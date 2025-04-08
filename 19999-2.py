@@ -24,7 +24,7 @@ if __name__ == '__main__':
     palette = generate_palette(palette_size)
     upscale_x = 3
 
-    for i, img_path in (enumerate(input_image_paths[5005:])):
+    for i, img_path in (enumerate(input_image_paths[:9359])):
         glitched_image = Image.open(img_path)
         w, h = glitched_image.size
 
