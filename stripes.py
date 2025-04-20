@@ -49,4 +49,6 @@ if __name__ == '__main__':
         imgOut = photo.resize((w, h), resample=0)
         imgOut = imgOut.quantize(palette=palIm, dither=Image.Dither.RASTERIZE)
 
-        imgOut.save(f"pallette-out/text1/text1-{time()}-{i}.png")
+        imgOut.show()
+
+        # imgOut.save(f"pallette-out/text1/text1-{time()}-{i}.png")

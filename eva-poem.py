@@ -8,7 +8,7 @@ from random import randrange
 from PIL import Image, ImageDraw, ImageFont
 from time import time
 
-from helper_functions import generate_palette, generate_stripes_overlay
+from helper_functions import generate_palette
 
 
 class TextMode:

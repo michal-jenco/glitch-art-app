@@ -1,14 +1,13 @@
 # Copyright 2025
 # Author: Michal Jenčo
 # Email: michal.jenco.brno@gmail.com
-from random import randrange
+
 
 from PIL import Image, ImageDraw, ImageFont
 import numpy as np
-from blend_modes import blending_functions
 from time import time
 
-from helper_functions import generate_palette, generate_stripes_overlay, reduce_palette
+from helper_functions import generate_palette
 
 
 if __name__ == '__main__':
