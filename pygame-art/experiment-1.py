@@ -4,8 +4,11 @@
 
 
 import pygame
+from pygame import gfxdraw
 import sys
 import math
+
+from helper_functions import generate_palette
 
 pygame.init()
 
@@ -22,10 +25,12 @@ BLUE = (80, 160, 255)
 
 # Rectangle setup
 rect_width = 40
-rect_height = 80
+rect_height = 120
 spacing = 20  # space between rectangles
 start_x = 50
 y_pos = HEIGHT // 2 - rect_height // 2
+
+palette = generate_palette(4, group=True)
 
 
 def draw_rectangle(x, y, width, height, color, rotation=0):
@@ -66,6 +71,7 @@ def draw_rectangle(x, y, width, height, color, rotation=0):
         points.append((x + x_offset, y + y_offset))
 
     pygame.draw.polygon(screen, color, points)
+    gfxdraw.aapolygon(screen, color, points)
 
 
 # Main loop
@@ -75,7 +81,7 @@ while running:
 
     # Draw line of rectangles
     for i in range(30):
-        draw_rectangle(400, i * 20, 3, 50, "blue", i * 12)
+        draw_rectangle(400, i * 20 + 50, 3, 50, palette[i % 4], i * 12)
 
     pygame.display.flip()
 
