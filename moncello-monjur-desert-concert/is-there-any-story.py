@@ -1,13 +1,14 @@
 # Copyright 2025
 # Author: Michal Jenčo
 # Email: michal.jenco.brno@gmail.com
+
 import random
-from random import randrange, choice
+from random import randrange, choice, randint
 
 from PIL import Image
 from pathlib import Path
 
-from helper_functions import create_stripes, make_tiles, generate_palette
+from helper_functions import make_tiles
 
 
 palette_1 = [
@@ -46,9 +47,16 @@ lyrics = [
 
 "is there any story",
 
+"my heart"
+
 "is there any way to your heart which is shorter than the way I tried",
 "is there any way to your heart which is shorter than I tried",
 ]
+
+
+def chunk_list(lst, n):
+    for i in range(0, len(lst), n):
+        yield lst[i:i + n]
 
 
 
@@ -62,35 +70,49 @@ if __name__ == '__main__':
 
     # palette = generate_palette(7, 255, 50, 200, 20, 200)
 
+    frame_overlap = 3
     palette = choice(good_palettes)
-    for i, img_path in (enumerate(input_image_paths[::])):
-        glitched_image = Image.open(img_path)
-        w, h = glitched_image.size
+    base_image = Image.open(input_image_paths[0])
+    w, h = base_image.size
 
-        glitched_image = make_tiles(glitched_image, 3)
+    for i, chunk in enumerate(list(chunk_list(input_image_paths, frame_overlap))[:10:]):
+        num_of_stripes = randrange(5, 10)
+        stripe_height = randrange(15, 40)
 
-        ### ADD STRIPE COPIES
-        create_stripes(
-            glitched_image,
-            num_of_stripes=randrange(5, 10),
-            stripe_height=randrange(15, 40),
-        )
-        ### ADD STRIPE COPIES
+        upper_from_list = [randint(0, h) for x in range(frame_overlap)]
+        lower_from_list = [upper_from_list[i] + stripe_height for i, x in enumerate(upper_from_list)]
 
-        ### DITHER + PALETTE
-        palette_image = Image.new('P', (1, 1))
-        palette_image.putpalette(palette)
+        upper_to_list = [randint(0, h) for x in range(frame_overlap)]
+        lower_to_list = [upper_to_list[i] + stripe_height for x in enumerate(upper_to_list)]
 
-        glitched_image = glitched_image.quantize(
-            palette=palette_image,
-            dither=Image.Dither.FLOYDSTEINBERG,
-        )
-        ### DITHER + PALETTE
+        for img_path in chunk:
+            glitched_image = Image.open(img_path)
+            w, h = glitched_image.size
 
+            ### ADD STRIPE COPIES
+            for j in range(num_of_stripes):
+                left, upper, right, lower = 0, upper_to_list[j], w, lower_to_list[j]
+                box = left, upper_to_list[j], right, lower_to_list[j]
+                stripe = glitched_image.crop(box=box)
 
-        save_filename = f"../pallette-out/{proj_name}/{source_folder_name}/{img_path.stem}-{i}.png"
-        print(f"saving {save_filename} - {i}/{len(input_image_paths)}")
-        glitched_image.save(save_filename)
+                glitched_image.paste(stripe, box=(0, upper, w, lower))
+            ### ADD STRIPE COPIES
 
-        if random.random() > .9:
-            palette = choice(good_palettes)
+            glitched_image = make_tiles(glitched_image, cnt=frame_overlap)
+
+            ### DITHER + PALETTE
+            palette_image = Image.new('P', (1, 1))
+            palette_image.putpalette(palette)
+
+            glitched_image = glitched_image.quantize(
+                palette=palette_image,
+                dither=Image.Dither.FLOYDSTEINBERG,
+            )
+            ### DITHER + PALETTE
+
+            save_filename = f"../pallette-out/{proj_name}/{source_folder_name}/{img_path.stem}-{i}.png"
+            print(f"saving {save_filename} - {i}/{len(input_image_paths)}")
+            glitched_image.save(save_filename)
+
+            if random.random() > .9:
+                palette = choice(good_palettes)

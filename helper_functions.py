@@ -178,6 +178,22 @@ def create_stripes(image: Image, num_of_stripes: int, stripe_height: int, stripe
         image.paste(stripe, box=(0, upper, image.width, lower))
 
 
+def create_stripes_multiframe(image: Image, num_of_stripes: int, stripe_height: int, frame_overlap: int = 3):
+    upper = randint(0, image.height)
+    lower = upper + stripe_height
+
+    for i in range(num_of_stripes):
+        left, upper, right, lower = 0, upper, image.width, lower
+        box = left, upper, right, lower
+        stripe = image.crop(box=box)
+
+        image.paste(stripe, box=(0, upper, image.width, lower))
+
+        if i % frame_overlap == 0:
+            upper = randint(0, image.height)
+            lower = upper + stripe_height
+
+
 def threshold_pixels(img_orig, img_palette, threshold: int):
     out = []
 
