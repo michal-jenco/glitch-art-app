@@ -11,21 +11,11 @@ from pathlib import Path
 from helper_functions import make_tiles
 
 
-palette_1 = [
-    20, 20, 19,
-    193, 5, 63,
-    199, 61, 69,
-    0, 0, 0
-]
+# palettes momo chose
+palette_1 = [20, 20, 19, 193, 5, 63, 199, 61, 69, 0, 0, 0]
+palette_2 = [0, 0, 1, 89, 0, 34, 121, 126, 120, 188, 167, 172, 201, 153, 215]
 
-palette_2 = [
-    0, 0, 1,
-    89, 0, 34,
-    121, 126, 120,
-    188, 167, 172,
-    201, 153, 215,
-]
-
+# some good ones I generated randomly
 pal_3 = [172, 29, 198, 164, 197, 181, 62, 113, 117, 33, 55, 26, 98, 177, 45, 147, 24, 33, 54, 162, 190]
 pal4 = [145, 154, 117, 147, 66, 41, 150, 108, 44, 102, 182, 73, 82, 89, 193, 90, 22, 21, 136, 144, 57]
 pal5 = [87, 53, 181, 33, 84, 30, 87, 166, 177, 156, 193, 63, 46, 55, 45, 189, 84, 96, 69, 161, 162]
@@ -59,6 +49,34 @@ def chunk_list(lst, n):
         yield lst[i:i + n]
 
 
+def pregenerate_stripes(num_of_stripes: int, image_size: tuple) -> list:
+    w, h = image_size
+    stripes = []
+
+    for i in range(num_of_stripes):
+        upper = randint(0, h)
+        lower = upper + stripe_height
+
+        left, upper, right, lower = 0, upper, w, lower
+        box_from = left, upper, right, lower
+
+        upper = randint(0, h)
+        lower = upper + stripe_height
+        box_to = 0, upper, w, lower
+
+        stripe = [box_from, box_to]
+        stripes.append(stripe)
+    return stripes
+
+
+def create_stripes_pregenerated(image: Image, pregenerated_stripes: list):
+    for stripe in pregenerated_stripes:
+        box_from, box_to = stripe
+        stripe = image.crop(box=box_from)
+
+        image.paste(stripe, box=box_to)
+
+
 
 if __name__ == '__main__':
     proj_name = "moncello-monjur-desert-2025"
@@ -72,47 +90,47 @@ if __name__ == '__main__':
 
     frame_overlap = 3
     palette = choice(good_palettes)
-    base_image = Image.open(input_image_paths[0])
-    w, h = base_image.size
+    _base_image = Image.open(input_image_paths[0])
+    w, h = _base_image.size
+    pregenerated_stripes = []
 
-    for i, chunk in enumerate(list(chunk_list(input_image_paths, frame_overlap))[:10:]):
+    ### PREGENERATE STRIPES
+    for imgpath in input_image_paths:
         num_of_stripes = randrange(5, 10)
         stripe_height = randrange(15, 40)
 
-        upper_from_list = [randint(0, h) for x in range(frame_overlap)]
-        lower_from_list = [upper_from_list[i] + stripe_height for i, x in enumerate(upper_from_list)]
+        stripes = pregenerate_stripes(num_of_stripes, (w, h))
 
-        upper_to_list = [randint(0, h) for x in range(frame_overlap)]
-        lower_to_list = [upper_to_list[i] + stripe_height for x in enumerate(upper_to_list)]
+        for _ in range(frame_overlap):
+            pregenerated_stripes.append(stripes)
+    ### PREGENERATE STRIPES
 
-        for img_path in chunk:
-            glitched_image = Image.open(img_path)
-            w, h = glitched_image.size
+    for i, img_path in enumerate(input_image_paths[::]):
+        glitched_image = Image.open(img_path)
+        w, h = glitched_image.size
 
-            ### ADD STRIPE COPIES
-            for j in range(num_of_stripes):
-                left, upper, right, lower = 0, upper_to_list[j], w, lower_to_list[j]
-                box = left, upper_to_list[j], right, lower_to_list[j]
-                stripe = glitched_image.crop(box=box)
+        glitched_image = make_tiles(glitched_image, cnt=frame_overlap)
 
-                glitched_image.paste(stripe, box=(0, upper, w, lower))
-            ### ADD STRIPE COPIES
+        ### ADD STRIPE COPIES
+        create_stripes_pregenerated(
+            glitched_image,
+            pregenerated_stripes[i],
+        )
+        ### ADD STRIPE COPIES
 
-            glitched_image = make_tiles(glitched_image, cnt=frame_overlap)
+        ### DITHER + PALETTE
+        palette_image = Image.new('P', (1, 1))
+        palette_image.putpalette(palette)
 
-            ### DITHER + PALETTE
-            palette_image = Image.new('P', (1, 1))
-            palette_image.putpalette(palette)
+        glitched_image = glitched_image.quantize(
+            palette=palette_image,
+            dither=Image.Dither.FLOYDSTEINBERG,
+        )
+        ### DITHER + PALETTE
 
-            glitched_image = glitched_image.quantize(
-                palette=palette_image,
-                dither=Image.Dither.FLOYDSTEINBERG,
-            )
-            ### DITHER + PALETTE
+        save_filename = f"../pallette-out/{proj_name}/{source_folder_name}/{img_path.stem}-{i}.png"
+        print(f"saving {save_filename} - {i}/{len(input_image_paths)}")
+        glitched_image.save(save_filename)
 
-            save_filename = f"../pallette-out/{proj_name}/{source_folder_name}/{img_path.stem}-{i}.png"
-            print(f"saving {save_filename} - {i}/{len(input_image_paths)}")
-            glitched_image.save(save_filename)
-
-            if random.random() > .9:
-                palette = choice(good_palettes)
+        if random.random() > .9:
+            palette = choice(good_palettes)
