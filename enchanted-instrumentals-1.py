@@ -2,6 +2,7 @@
 # Author: Michal Jenčo
 # Email: michal.jenco.brno@gmail.com
 
+
 from random import randrange
 
 from PIL import Image
@@ -10,47 +11,14 @@ from pathlib import Path
 from helper_functions import generate_palette, vary_palette, create_stripes, darken_palette
 
 
-sentences = [
-    "truth was out there I saw it",
-    "truth was out there YOU saw it",
-    "truth was out there SHE saw it",
-    "truth was out there WE saw it",
-    "but nobody said a word",
-    "Nobody said a fucking word",
-    "So I asked",
-    "What is this all about",
-    "So I asked",
-    "What is this all about",
-    "So I asked ",
-    "What is this all about",
-    "And I kept asking",
-    "Because I couldn’t get it",
-    "What are we watching",
-    "What is this all fucking about",
-    "truth was out there I saw it",
-    "truth was out there YOU saw it",
-    "truth was out there SHE saw it",
-    "truth was out there WE saw it",
-    "But nobody said a word",
-    "Nobody said a fucking word",
-    "Nobody said a fucking word",
-    "Nobody",
-    "Nobody said a fucking word",
-    "Nobody",
-    "We were silent",
-    "What are we watching",
-]
-
 
 if __name__ == '__main__':
-    proj_name = "truth-is-out-there"
-    input_imgs_folder = f"source-imgs/{proj_name}/jpeg-exports"
+    proj_name = "enchanted-instrumentals/1"
+    input_imgs_folder = f"source-imgs/{proj_name}"
     output_imgs_folder = f"pallette-out/{proj_name}"
 
-    scene_name = "intro-up-and-down"
-
-    input_image_paths = list(Path(f"{input_imgs_folder}/{scene_name}").glob("*.jpg"))
-    palette_size = 12
+    input_image_paths = list(Path(input_imgs_folder).glob("*.jpg"))
+    palette_size = 8
 
     palette = generate_palette(palette_size)
     upscale_x = 3
@@ -63,7 +31,7 @@ if __name__ == '__main__':
         create_stripes(
             glitched_image,
             num_of_stripes=randrange(5, 10),
-            stripe_height=randrange(15, 50),
+            stripe_height=randrange(5, 20),
         )
         ### ADD STRIPE COPIES
 
@@ -77,9 +45,10 @@ if __name__ == '__main__':
         )
         ### DITHER + PALETTE
 
+        glitched_image = glitched_image.resize((w * upscale_x, h * upscale_x), resample=0)
         save_filename = f"pallette-out/{proj_name}/{img_path.stem}.png"
         print(f"saving {save_filename} - {i}/{len(input_image_paths)}")
         glitched_image.save(save_filename)
 
-        palette = vary_palette(palette, 15, 5, 15)
+        palette = vary_palette(palette, 20, 10, 30)
         palette = darken_palette(palette, 4)
