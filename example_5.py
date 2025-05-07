@@ -12,7 +12,7 @@ from math import sin, tan, tanh, cos, pi
 from typing import Any
 from random import choice
 
-from helper_functions import generate_palette, save_image_with_cv2
+from helper_functions import generate_palette
 
 
 def glitch_pixels(img: Image.Image, i: int) -> Image:
@@ -92,8 +92,8 @@ def generate_imgs_with_adaptive_palette(img,
     img = reduce_palette(palette_size, img, palette)
 
     img_save_name = f"pallette-out/5/{int(time())}-{i}.png"
+    # img.show(img_save_name)
     img.save(img_save_name)
-    # save_image_with_cv2(img=img, name=img_save_name)
 
 
 if __name__ == '__main__':

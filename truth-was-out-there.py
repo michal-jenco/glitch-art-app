@@ -42,18 +42,27 @@ sentences = [
 ]
 
 
+# some good ones I generated randomly
+pal_3 = [172, 29, 198, 164, 197, 181, 62, 113, 117, 33, 55, 26, 98, 177, 45, 147, 24, 33, 54, 162, 190]
+pal4 = [145, 154, 117, 147, 66, 41, 150, 108, 44, 102, 182, 73, 82, 89, 193, 90, 22, 21, 136, 144, 57]
+pal5 = [87, 53, 181, 33, 84, 30, 87, 166, 177, 156, 193, 63, 46, 55, 45, 189, 84, 96, 69, 161, 162]
+pal6 = [60, 170, 156, 50, 161, 100, 159, 180, 190, 54, 48, 53, 192, 53, 170, 137, 133, 127, 165, 24, 160]
+pal7 = [58, 37, 53, 161, 182, 62, 33, 116, 74, 126, 52, 156, 163, 184, 46, 161, 21, 178, 199, 89, 55]
+
+good_palettes = pal_3, pal4, pal5, pal6, pal7
+
+
 if __name__ == '__main__':
     proj_name = "truth-is-out-there"
     input_imgs_folder = f"source-imgs/{proj_name}/jpeg-exports"
     output_imgs_folder = f"pallette-out/{proj_name}"
 
-    scene_name = "intro-up-and-down"
+    scene_name = "running-1"
 
     input_image_paths = list(Path(f"{input_imgs_folder}/{scene_name}").glob("*.jpg"))
-    palette_size = 12
+    palette_size = 7
 
     palette = generate_palette(palette_size)
-    upscale_x = 3
 
     for i, img_path in (enumerate(input_image_paths[::])):
         glitched_image = Image.open(img_path)
