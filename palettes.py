@@ -26,3 +26,23 @@ trans_flag_palette = (
     255, 255, 255,  # White
     0, 0, 0,
 )
+
+# Color mapping similar to what was used in old BASIC palette (simplified)
+basic_colors = [
+    (0, 0, 0),       # 0: black
+    (0, 0, 128),     # 1: dark blue
+    (0, 128, 0),     # 2: dark green
+    (0, 128, 128),   # 3: dark cyan
+    (128, 0, 0),     # 4: dark red
+    (128, 0, 128),   # 5: dark magenta
+    (128, 128, 0),   # 6: dark yellow
+    (192, 192, 192), # 7: light gray
+    (128, 128, 128), # 8: dark gray
+    (0, 0, 255),     # 9: blue
+    (0, 255, 0),     # 10: green
+    (0, 255, 255),   # 11: cyan
+    (255, 0, 0),     # 12: red
+    (255, 0, 255),   # 13: magenta
+    (255, 255, 0),   # 14: yellow
+    (255, 255, 255), # 15: white
+]
