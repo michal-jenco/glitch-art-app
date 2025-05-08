@@ -64,10 +64,10 @@ def fractally_func_4(r, g, b, h, w, f1, f2, f3,
                      wave_size_modifier_g: int = 0,
                      wave_size_modifier_b: int = 0,
                      i: int = 0) -> tuple:
-    red_amount, green_amount, blue_amount = 235, 185, 215
+    red_amount, green_amount, blue_amount = 255, 255, 255
 
     ### this code is really, really sensitive to the value of base_wave_size - play around 255
-    base_wave_size = 260
+    base_wave_size = 9
     new_r = r + .005 * (f1(b)/3 + h -(w * (i + 1))) / (base_wave_size + wave_size_modifier_r) * red_amount
     new_g = g + .005 * (f2(r)/3 + r) / (base_wave_size + wave_size_modifier_g) * green_amount
     new_b = b + .005 * (f3(g)/3 - h +(w / (i + 1))) / (base_wave_size + wave_size_modifier_b) * blue_amount
@@ -115,7 +115,7 @@ def generate_consecutive_palettes(img: Image,
             i = i,
         )
 
-        img_save_name = f"pallette-out/polytravellers/polytravellers-{int(time())}-{i}.png"
+        img_save_name = f"pallette-out/veronika-zilinska/{int(time())}-{i}.png"
         new_img.save(img_save_name)
 
 
@@ -124,13 +124,13 @@ if __name__ == '__main__':
 
     for i in range(0, cnt):
         print(f"making img {i}/{cnt}")
-        image = Image.open("source-imgs/fabcinova_red.jpg")
+        image = Image.open("source-imgs/veronika-zilinska/4-up.jpg")
 
         pixels = image.load()
 
         generate_consecutive_palettes(image,
-                                      image_count=32,
-                                      palette_size=32
+                                      image_count=9,
+                                      palette_size=128
                                       ,
                                       base_wave_size=None,
                                       )
