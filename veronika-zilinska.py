@@ -7,8 +7,7 @@
 
 from PIL import Image, ImagePalette
 from time import time
-from math import  sin, tanh, cos, tan
-import numpy as np
+from math import  sin, cos
 from numpy.random import choice
 
 from helper_functions import generate_palette
@@ -32,28 +31,6 @@ def glitch_pixels(img: Image, func_r, func_g, func_b, base_wave_size: int, i: in
             r, g, b = fractally_func_4(r, g ,b, h, w, func_r, func_g, func_b, base_wave_size, mod_r, mod_g, mod_b, i)
 
             pixels[w, h] = (r, g, b)
-
-    return img
-
-
-def glitch_pixels_numpy(img: Image, func_r, func_g, func_b, base_wave_size: int, i: int) -> Image:
-    width, height = img.size
-
-    pixels = np.array(img)
-
-    for w in pixels:
-        for h in range(0, width // 3):
-            r, g, b = w[h * 3: h * 3 + 3]
-            print(r, g, b)
-
-            mod_r = int(h % 25)
-            mod_g = int(h % 25)
-            mod_b = int(h % 25)
-
-            r, g, b = fractally_func_4(r, g ,b, h, w, func_r, func_g, func_b, base_wave_size, mod_r, mod_g, mod_b, i)
-
-            pixels[w, h] = (r, g, b)
-    img.putdata(pixels)
 
     return img
 
