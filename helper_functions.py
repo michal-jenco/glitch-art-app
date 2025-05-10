@@ -518,3 +518,40 @@ def round_and_diffuse_corners(image, radius=50, blur=10, bg_color=(255, 255, 255
     background.paste(image, (0, 0), mask)
 
     return background
+
+
+def create_image_grid(image_list, rows, cols, padding=10, outer_padding=10, bg_color=(0, 0, 0)):
+    """
+    Arrange a list of images into a grid with internal and outer padding.
+
+    Parameters:
+        image_list (list): List of PIL.Image objects
+        rows (int): Number of rows in the grid
+        cols (int): Number of columns in the grid
+        padding (int): Padding between images in pixels
+        outer_padding (int): Padding around the edges of the grid
+        bg_color (tuple): Background color (R, G, B)
+
+    Returns:
+        PIL.Image: The combined grid image
+    """
+
+    # Resize all images to the same size (based on the first one)
+    width, height = image_list[0].size
+    resized_images = [img.resize((width, height)) for img in image_list]
+
+    # Calculate final grid size including outer padding
+    grid_width = cols * width + (cols - 1) * padding + 2 * outer_padding
+    grid_height = rows * height + (rows - 1) * padding + 2 * outer_padding
+
+    # Create new blank image
+    grid_image = Image.new("RGB", (grid_width, grid_height), bg_color)
+
+    for idx, img in enumerate(resized_images):
+        if idx >= rows * cols:
+            break  # Ignore extra images
+        x = outer_padding + (idx % cols) * (width + padding)
+        y = outer_padding + (idx // cols) * (height + padding)
+        grid_image.paste(img, (x, y))
+
+    return grid_image
