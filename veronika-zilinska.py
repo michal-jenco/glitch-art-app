@@ -45,9 +45,9 @@ def fractally_func_4(r, g, b, h, w, f1, f2, f3,
 
     ### this code is really, really sensitive to the value of base_wave_size - play around 255
     base_wave_size = 9
-    new_r = r + .005 * (f1(b)/3 + h -(w * (i + 1))) / (base_wave_size + wave_size_modifier_r) * red_amount
-    new_g = g + .005 * (f2(r)/3 + r) / (base_wave_size + wave_size_modifier_g) * green_amount
-    new_b = b + .005 * (f3(g)/3 - h +(w / (i + 1))) / (base_wave_size + wave_size_modifier_b) * blue_amount
+    new_r = r + .001 * (f1(b)/3 + h -(w * (i + 1))) / (base_wave_size + wave_size_modifier_r) * red_amount
+    new_g = g + .001 * (f2(r)/3 + r) / (base_wave_size + wave_size_modifier_g) * green_amount
+    new_b = b + .001 * (f3(g)/3 - h +(w / (i + 1))) / (base_wave_size + wave_size_modifier_b) * blue_amount
 
     return int(new_r), int(new_g), int(new_b)
 
@@ -97,7 +97,7 @@ def generate_consecutive_palettes(img: Image,
 
 
 if __name__ == '__main__':
-    cnt = 2
+    cnt = 32
 
     for i in range(0, cnt):
         print(f"making img {i}/{cnt}")
@@ -106,7 +106,7 @@ if __name__ == '__main__':
         pixels = image.load()
 
         generate_consecutive_palettes(image,
-                                      image_count=9,
+                                      image_count=24,
                                       palette_size=128
                                       ,
                                       base_wave_size=None,
