@@ -15,8 +15,6 @@ if __name__ == '__main__':
     rows, cols = 5, 4
     windows = sliding_window_circular(input_images_indexes, rows * cols)
 
-    iterations = 100
-
     for i, window in enumerate(windows[::]):
         iteration_images = [input_images[idx] for idx in window]
         print(iteration_images)
