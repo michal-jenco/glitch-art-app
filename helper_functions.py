@@ -520,38 +520,42 @@ def round_and_diffuse_corners(image, radius=50, blur=10, bg_color=(255, 255, 255
     return background
 
 
-def create_image_grid(image_list, rows, cols, padding=10, outer_padding=10, bg_color=(0, 0, 0)):
-    """
-    Arrange a list of images into a grid with internal and outer padding.
+def create_image_grid(images, rows, cols, padding=10, outer_padding=20, direction="vertical",
+                      resize_by=4):
+    assert len(images) <= rows * cols, "Too many images for the grid size."
 
-    Parameters:
-        image_list (list): List of PIL.Image objects
-        rows (int): Number of rows in the grid
-        cols (int): Number of columns in the grid
-        padding (int): Padding between images in pixels
-        outer_padding (int): Padding around the edges of the grid
-        bg_color (tuple): Background color (R, G, B)
+    # Get size of each image (assuming all same size)
+    img_width, img_height = images[0].size
 
-    Returns:
-        PIL.Image: The combined grid image
-    """
+    # Calculate final image size
+    total_width = (outer_padding * 2 + cols * img_width + (cols - 1) * padding)
+    total_height = (outer_padding * 2 + rows * img_height + (rows - 1) * padding)
 
-    # Resize all images to the same size (based on the first one)
-    width, height = image_list[0].size
-    resized_images = [img.resize((width, height)) for img in image_list]
+    # Create new image
+    grid_img = Image.new("RGB", (total_width, total_height), color=(0, 0, 0))
 
-    # Calculate final grid size including outer padding
-    grid_width = cols * width + (cols - 1) * padding + 2 * outer_padding
-    grid_height = rows * height + (rows - 1) * padding + 2 * outer_padding
+    for idx, img in enumerate(images):
+        if direction == "horizontal":
+            row = idx // cols
+            col = idx % cols
+        elif direction == "vertical":
+            col = idx // rows
+            row = idx % rows
+        else:
+            raise ValueError("direction must be 'horizontal' or 'vertical'")
 
-    # Create new blank image
-    grid_image = Image.new("RGB", (grid_width, grid_height), bg_color)
+        x = outer_padding + col * (img_width + padding)
+        y = outer_padding + row * (img_height + padding)
+        grid_img.paste(img, (x, y))
 
-    for idx, img in enumerate(resized_images):
-        if idx >= rows * cols:
-            break  # Ignore extra images
-        x = outer_padding + (idx % cols) * (width + padding)
-        y = outer_padding + (idx // cols) * (height + padding)
-        grid_image.paste(img, (x, y))
+    grid_img = grid_img.resize((total_width // resize_by, total_height // resize_by), resample=0)
+    return grid_img
 
-    return grid_image
+
+def sliding_window_circular(lst, size):
+    n = len(lst)
+    result = []
+    for i in range(n):
+        window = [lst[(i - j) % n] for j in range(min(size, i + 1))]
+        result.append(window)
+    return result

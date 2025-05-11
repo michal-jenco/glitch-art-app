@@ -6,6 +6,9 @@ from PIL import Image, ImageDraw
 from pathlib import Path
 import math
 from time import time
+from random import choice
+
+from palettes import basic_colors
 
 
 def spiral_polar_glitch(pil_img, intensity=10):
@@ -38,12 +41,14 @@ def overlay_colored_squares(img, square_size=50, opacity=80):
 
     for x in range(0, width, square_size):
         for y in range(0, height, square_size):
-            color = (
-                np.random.randint(100, 255),
-                np.random.randint(100, 255),
-                np.random.randint(100, 255),
-                opacity
-            )
+            # color = (
+            #     np.random.randint(100, 255),
+            #     np.random.randint(100, 255),
+            #     np.random.randint(100, 255),
+            #     opacity
+            # )
+
+            color = *choice(basic_colors), opacity
             draw.rectangle(
                 [x, y, x + square_size, y + square_size],
                 fill=color
@@ -88,8 +93,8 @@ print(input_image_paths)
 for i, img_path in enumerate(input_image_paths[::]):
     img = Image.open(img_path)
     glitched = spiral_polar_glitch(img)
-    glitched = apply_pixel_sort(glitched, angle=45)
-    final = overlay_colored_squares(glitched)
+    glitched = overlay_colored_squares(glitched)
+    final = apply_pixel_sort(glitched, angle=i*10)
 
     img_save_name = f"../pallette-out/vary-aesthetic/spiral/{int(time())}-{i}.png"
     final.save(img_save_name)
