@@ -188,11 +188,12 @@ class GridGeneratorApp(QWidget):
                 return
 
             video_frames = []
-            for img_path in generated_files:
+            for img_path in generated_files[::]:
                 frame = imageio.imread(img_path)
                 video_frames.extend([frame] * self.frames_per_image_spin.value())
 
             video_output_path = Path(self.video_output_folder_path) / f"grid_video_{int(time())}.mp4"
+            print(f"saved video to {video_output_path}")
             imageio.mimsave(video_output_path, video_frames, fps=self.fps_spin.value())
 
         QMessageBox.information(self, "Done", "Grids (and video) generated successfully!")
