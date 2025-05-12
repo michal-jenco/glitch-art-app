@@ -60,6 +60,40 @@ def draw_cube(screen, rotation=(0, 0, 0), color=(255, 0, 255)):
     for edge in edges:
         pygame.draw.line(screen, color, points[edge[0]], points[edge[1]], 5)
 
+
+def randomly_modify_vertices(vertices, change_probability=0.3, delta_range=(-0.5, 0.5)):
+    """
+    Randomly modifies some values in a list of 3D coordinates.
+
+    Args:
+        vertices (list): List of [x, y, z] vertices.
+        change_probability (float): Probability of each coordinate being changed.
+        delta_range (tuple): Min and max value to add/subtract to coordinates.
+
+    Returns:
+        list: Modified list of vertices.
+    """
+    modified = copy.deepcopy(vertices)
+
+    for i, vertex in enumerate(modified):
+        for j in range(3):
+            if random.random() < change_probability:
+                delta = random.uniform(*delta_range)
+                modified[i][j] += delta
+
+    return modified
+
+# original_vertices = [
+#     [-1, -1, -1], [1, -1, -1],
+#     [1, 1, -1], [-1, 1, -1],
+#     [-1, -1, 1], [1, -1, 1],
+#     [1, 1, 1], [-1, 1, 1]
+# ]
+#
+# new_vertices = randomly_modify_vertices(original_vertices, change_probability=0.4, delta_range=(-0.3, 0.3))
+# print(new_vertices)
+#
+
 # Main loop
 def run_cube(rotation=(30, 30, 0), color=(0, 255, 255)):
     pygame.init()
