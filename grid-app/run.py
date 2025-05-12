@@ -42,6 +42,7 @@ class GridGeneratorApp(QWidget):
         self.padding_spin = QSpinBox()
         self.outer_padding_spin = QSpinBox()
         self.resize_by_spin = QSpinBox()
+        self.img_skip = QSpinBox()
 
         self.populate_ui()
         self.connect_signals()
@@ -120,7 +121,7 @@ class GridGeneratorApp(QWidget):
             QMessageBox.warning(self, "Error", "No JPG images found in input folder.")
             return
 
-        input_images = [Image.open(p) for p in image_paths]
+        input_images = [Image.open(p) for p in image_paths[::3]]
         image_indexes = [i for i in range(len(input_images))] * 1
         rows = self.rows_spin.value()
         cols = self.cols_spin.value()
