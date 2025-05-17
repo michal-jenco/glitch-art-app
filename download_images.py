@@ -49,12 +49,12 @@ def download_images(search_query, num_images=50, folder_name="images"):
 
                     # Create a file path to save the image
                     img_filename = os.path.join(folder_name, f"{search_query}_{image_count + 1}.jpg")
+                    print(f"saving {img_filename}")
 
                     # Save the image to the folder
                     with open(img_filename, 'wb') as f:
                         f.write(img_data)
 
-                    print(f"Downloaded {img_filename}")
                     image_count += 1
 
                     # Stop once we have downloaded the desired number of images
@@ -72,6 +72,6 @@ def download_images(search_query, num_images=50, folder_name="images"):
 
     print(f"Downloaded {image_count} images.")
 
-prompt = "osaka azumanga daioh"
+prompt = "eyes"
 # Example usage
-download_images(prompt, num_images=50, folder_name=prompt)
+download_images(prompt, num_images=500, folder_name=prompt)
