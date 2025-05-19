@@ -40,8 +40,9 @@ if __name__ == '__main__':
 
         np_photo = np.array(photo)
         np_photo = np_photo.astype(float)
+        glitches_per_image = 17
 
-        for i in range(17):
+        for i in range(glitches_per_image):
             palette_image = Image.new('P', (1, 1))
             palette = generate_palette(palette_size)
             palette_image.putpalette(palette)

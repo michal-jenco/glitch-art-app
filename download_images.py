@@ -72,6 +72,6 @@ def download_images(search_query, num_images=50, folder_name="images"):
 
     print(f"Downloaded {image_count} images.")
 
-prompt = "eyes"
+prompt = "mothman"
 # Example usage
 download_images(prompt, num_images=500, folder_name=prompt)
