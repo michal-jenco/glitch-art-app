@@ -72,6 +72,6 @@ def download_images(search_query, num_images=50, folder_name="images"):
 
     print(f"Downloaded {image_count} images.")
 
-prompt = "mothman"
+prompt = ("israel palestine genocide")
 # Example usage
-download_images(prompt, num_images=500, folder_name=prompt)
+download_images(prompt, num_images=100, folder_name=prompt)
