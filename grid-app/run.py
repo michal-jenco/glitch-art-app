@@ -9,6 +9,8 @@ from PyQt5.QtWidgets import (
 )
 from PIL import Image
 import imageio.v2 as imageio
+from natsort import os_sorted
+
 from helper_functions import create_image_grid, sliding_window_circular
 
 CONFIG_FILE = "config.json"
@@ -148,7 +150,11 @@ class GridGeneratorApp(QWidget):
             QMessageBox.warning(self, "Error", "Please select input and output folders.")
             return
 
-        image_paths = list(Path(self.input_folder_path).glob("*.jpg"))
+        image_paths = list(Path(self.input_folder_path).glob("*.png"))
+        image_paths = os_sorted(image_paths)
+
+        for p in image_paths:
+            print(str(p).split("/")[-1])
         if not image_paths:
             QMessageBox.warning(self, "Error", "No JPG images found in input folder.")
             return

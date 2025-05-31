@@ -51,26 +51,29 @@ def fractally_func_4(r, g, b, h, w, f1, f2, f3,
     return int(new_r), int(new_g), int(new_b)
 
 def generate_consecutive_palettes(img: Image,
+                                  img_name: str,
                                   image_count: int,
                                   base_wave_size: int,
                                   palette_size: int | None = None,
                                   output_dir: str = "pallette-out",
                                   pixels=None):
-    palette = generate_palette(size=palette_size)
-    funcs = (cos, sin)
-    func_r = choice(funcs)
-    func_g = choice(funcs)
-    func_b = choice(funcs)
+    for loop in range(3):
 
-    for i in range(2, image_count + 2):
-        new_palette = ImagePalette.ImagePalette("P", palette=palette)
-        new_img = img.convert("P", palette=new_palette, colors=palette_size)
-        new_img.putpalette(palette)
-        new_img = new_img.convert("P", palette=Image.ADAPTIVE, colors=i if not palette_size else palette_size)
-        new_img = glitch_pixels(new_img, func_r=func_r, func_g=func_g, func_b=func_b, base_wave_size=base_wave_size, i=i, pixels=pixels)
-        img_save_name = os.path.join(output_dir, f"{int(time())}-{i}.png")
-        Path(output_dir).mkdir(parents=True, exist_ok=True)
-        new_img.save(img_save_name)
+        palette = generate_palette(size=palette_size)
+        funcs = (cos, sin)
+        func_r = choice(funcs)
+        func_g = choice(funcs)
+        func_b = choice(funcs)
+
+        for i in range(2, image_count + 2):
+            new_palette = ImagePalette.ImagePalette("P", palette=palette)
+            new_img = img.convert("P", palette=new_palette, colors=palette_size)
+            new_img.putpalette(palette)
+            new_img = new_img.convert("P", palette=Image.ADAPTIVE, colors=i if not palette_size else palette_size)
+            new_img = glitch_pixels(new_img, func_r=func_r, func_g=func_g, func_b=func_b, base_wave_size=base_wave_size, i=i, pixels=pixels)
+            img_save_name = os.path.join(output_dir, f"{img_name}-{int(time())}-{i}.png")
+            Path(output_dir).mkdir(parents=True, exist_ok=True)
+            new_img.save(img_save_name)
 
 class GlitchApp(QWidget):
     def __init__(self):
@@ -162,8 +165,10 @@ class GlitchApp(QWidget):
             try:
                 img = Image.open(img_path).convert("RGB")
                 pixels = img.load()
+                img_name = str(img_path).split("/")[-1]
                 generate_consecutive_palettes(
                     img,
+                    img_name,
                     image_count=self.count_spin.value(),
                     palette_size=self.palette_spin.value(),
                     base_wave_size=self.base_wave_spin.value(),
