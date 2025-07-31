@@ -156,7 +156,7 @@ class GridGeneratorApp(QWidget):
         for p in image_paths:
             print(str(p).split("/")[-1])
         if not image_paths:
-            QMessageBox.warning(self, "Error", "No JPG images found in input folder.")
+            QMessageBox.warning(self, "Error", "No JPG imageks found in input folder.")
             return
 
         input_images = [Image.open(p) for p in image_paths]
