@@ -3,6 +3,10 @@ import os
 import json
 import random
 from pathlib import Path
+from random import randint, uniform
+
+from time import time
+
 from PIL import Image, ImageOps, ImageEnhance, ImageFilter
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QLabel, QPushButton, QFileDialog, QVBoxLayout, QMessageBox
@@ -24,12 +28,6 @@ def save_config(config):
 
 
 # === Glitch Effects === #
-def glitch_1(img):
-    return img.transpose(Image.FLIP_LEFT_RIGHT)
-
-def glitch_2(img):
-    return img.rotate(180)
-
 def glitch_3(img):
     return ImageOps.invert(img.convert("RGB"))
 
@@ -42,17 +40,14 @@ def glitch_5(img):
 def glitch_6(img):
     img = img.convert("RGB")
     pixels = img.load()
-    for i in range(0, img.size[0], 5):
-        for j in range(0, img.size[1], 5):
+    for i in range(0, img.size[0], 50):
+        for j in range(0, img.size[1], 50):
             if i+1 < img.size[0] and j+1 < img.size[1]:
                 pixels[i, j] = (255 - pixels[i, j][0], pixels[i, j][1], pixels[i, j][2])
     return img
 
-def glitch_7(img):
-    return img.transpose(Image.ROTATE_90)
-
 def glitch_8(img):
-    return ImageEnhance.Brightness(img).enhance(1.5)
+    return ImageEnhance.Brightness(img).enhance(uniform(.5, 1.5))
 
 def glitch_9(img):
     r, g, b = img.split()
@@ -64,14 +59,14 @@ def glitch_10(img):
     for _ in range(20):
         x = random.randint(0, w-10)
         y = random.randint(0, h-10)
-        box = (x, y, x + 10, y + 10)
+        box = (x, y, x + 50, y + 50)
         region = img.crop(box)
-        img.paste(region, (x + random.randint(-5, 5), y + random.randint(-5, 5)))
+        img.paste(region, (x + random.randint(-50, 50), y + random.randint(-50, 50)))
     return img
 
 glitch_functions = [
-    glitch_1, glitch_2, glitch_3, glitch_4, glitch_5,
-    glitch_6, glitch_7, glitch_8, glitch_9, glitch_10
+    glitch_3, glitch_4, glitch_5,
+    glitch_6, glitch_8, glitch_9, glitch_10, glitch_6, glitch_6, glitch_6
 ]
 
 
@@ -121,11 +116,15 @@ class GlitchApp(QWidget):
         output_folder = Path(self.input_folder_path) / "glitched"
         output_folder.mkdir(exist_ok=True)
 
-        for img_path in input_paths:
-            img = Image.open(img_path)
-            glitch_func = random.choice(glitch_functions)
-            glitched = glitch_func(img)
-            output_path = output_folder / f"glitched_{img_path.name}"
+        for img_idx, img_path in enumerate(input_paths):
+            glitched = Image.open(img_path)
+
+            effect_count = randint(2, 10)
+            for i in range(effect_count):
+                print(f"applying effect #{i + 1}/{effect_count} on img #{img_idx + 1}/{len(input_paths)}")
+                glitch_func = random.choice(glitch_functions)
+                glitched = glitch_func(glitched)
+            output_path = output_folder / f"glitched_{int(time())}_{img_path.name}"
             glitched.save(output_path)
 
         QMessageBox.information(self, "Done", f"Images saved to {output_folder}")
